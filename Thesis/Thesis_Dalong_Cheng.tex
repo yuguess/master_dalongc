@@ -1,0 +1,163 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Default font size is 12pt, it can be changed here
+\documentclass[12pt]{Latex/Classes/PhDthesisPSnPDF} 
+
+
+\include{Latex/Macros/MacroFile1}
+
+\usepackage{geometry} % Required to change the page size to A4
+\geometry{a4paper} % Set the page size to be A4 as opposed to the default US Letter
+
+\usepackage{graphicx} % Required for including pictures
+\usepackage{float}
+\usepackage{wrapfig} % Allows in-line images such as the example fish picture
+\usepackage{caption}
+\usepackage{amsmath}
+\usepackage{slashbox}
+
+
+\usepackage{lipsum} % Used for inserting dummy 'Lorem ipsum' text into the template
+
+\linespread{1.2} % Line spacing
+
+%\setlength\parindent{0pt} % Uncomment to remove all indentation from paragraphs
+
+\graphicspath{{./Pictures/}} % Specifies the directory where pictures are stored
+
+\usepackage{listings}
+\usepackage{color}
+
+\definecolor{dkgreen}{rgb}{0,0.6,0}
+\definecolor{gray}{rgb}{0.5,0.5,0.5}
+\definecolor{mauve}{rgb}{0.58,0,0.82}
+
+\lstset{frame=tb,
+  language=Java,
+  aboveskip=3mm,
+  belowskip=3mm,
+  showstringspaces=false,
+  columns=flexible,
+  basicstyle={\small\ttfamily},
+  numbers=none,
+  numberstyle=\tiny\color{gray},
+  keywordstyle=\color{blue},
+  commentstyle=\color{dkgreen},
+  stringstyle=\color{mauve},
+  breaklines=true,
+  breakatwhitespace=true
+  tabsize=3
+}
+
+\begin{document}
+
+%----------------------------------------------------------------------------------------
+%	TITLE PAGE
+%----------------------------------------------------------------------------------------
+
+\begin{titlepage}
+
+\newcommand{\HRule}{\rule{\linewidth}{0.5mm}} % Defines a new command for the horizontal lines, change thickness here
+
+\center % Center everything on the page
+
+\textsc{\LARGE Carnegie Mellon University}\\[1.5cm] % Name of your university/college
+\textsc{\Large Master of Science in Music and Technology}\\[0.5cm] % Major heading such as course name
+
+\HRule \\[0.4cm]
+{\large \bfseries A Music Player for the \\ Human Computer Music Performance Project}\\[0.4cm] % Title of your document
+\HRule \\[1.5cm]
+
+\begin{minipage}{0.4\textwidth}
+\begin{flushleft} \large
+\emph{Author:}\\
+Dalong \textsc{Cheng} % Your name
+\end{flushleft}
+\end{minipage}
+~
+\begin{minipage}{0.4\textwidth}
+\begin{flushright} \large
+\emph{Supervisor:} \\
+Roger \textsc{Dannenberg} \\ % Supervisor's Name
+Richard \textsc{Stern} \\
+Richard \textsc{Randall}
+\end{flushright}
+\end{minipage}\\[4cm]
+
+{\large \today}\\[3cm] % Date, change the \today to a set date if you want to be precise
+
+%\includegraphics{Logo}\\[1cm] % Include a department/university logo - this will require the graphicx package
+
+\vfill % Fill the rest of the page with whitespace
+
+%----------------------------------------------------------------------------------------
+%	TABLE OF CONTENTS
+%----------------------------------------------------------------------------------------
+\end{titlepage}
+
+\setcounter{page}{2}
+\pagenumbering{roman}
+
+\frontmatter
+\include{0/abstract}
+\include{0/acknowledgement}
+
+\setcounter{secnumdepth}{3} % organisational level that receives a numbers
+\setcounter{tocdepth}{3}    % print table of contents for level 3
+\tableofcontents % Include a table of contents
+
+\listoffigures	% print list of figures
+
+\listoftables
+
+\newpage % Begins the essay on a new page instead of on the same page as the table of contents 
+
+%----------------------------------------------------------------------------------------
+%	INTRODUCTION
+%----------------------------------------------------------------------------------------
+
+\pagestyle{headings}
+\setcounter{page}{1}
+\pagenumbering{arabic}
+
+\mainmatter
+\renewcommand{\chaptername}{} % uncomment to print only "1" not "Chapter 1"
+
+%Example citation \cite{Figueredo:2009dg}
+\include{1/subdoc}
+\include{2/subdoc}
+\include{3/subdoc}			
+\include{4/subdoc}	
+%\include{5/subdoc}
+\include{6/subdoc}
+\include{7/subdoc}
+\include{8/subdoc}
+
+\begin{thebibliography}{99} % Bibliography - this is intentionally simple in this template
+
+\bibitem{Dawen:2011}
+Framework for Coordination and Synchronization of Media, D.Liang, G.Xia and R.Dannenberg, NIME 2011.
+
+\bibitem{ZMQ}
+http://www.zeromq.org
+
+\bibitem{zeromq}
+http://sourceforge.net/p/livedisp/wiki/HCMP%20messaging%20protocol/
+
+\bibitem{Serpent}
+http://www.cs.cmu.edu/~music/aura/serpent-info.htm
+
+\bibitem{wxWidget}
+http://www.wxwidget.org
+
+\bibitem{Dawen:ISMIR2011}
+Segmentation, Clustering, and Display in a Personal Music Database for Musicians,
+G.Xia, D.Liang, R.Dannenberg, ISMIR 2011.
+
+\end{thebibliography}
+
+%----------------------------------------------------------------------------------------
+
+\end{document}
