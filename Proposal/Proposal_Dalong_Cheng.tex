@@ -143,6 +143,15 @@ In this part, I describe the design idea behind some of the features of the Play
 
 \subsection{HCMP Midi Player GUI Design} % Sub-section
 
+\subsubsection{Layout and Components}
+Figure 3 is layout of the midi player. the player will mainly contain 4 components. 
+
+\begin{figure}[H] % Example image
+\center{\includegraphics[width=0.4\linewidth]{5.png}}
+\caption{HCMP Midi player layout}
+\label{fig:speciation}
+\end{figure}
+
 \subsubsection{Midi Keyboard and Data Display} % Sub-sub-section
 The Player will contain a virtual keyboard and midi data window. The 
 virtual keyboard will have parameters like channel, tempo, etc for the user to set. 
@@ -208,6 +217,60 @@ Processing the message is not a time consuming job so the overall overhead of wa
 thread will be trivial. Most of work of the performer thread is to maintain a queue of pending
 midi message and send them at correct time.
 
+\section{Evaluation}
+Based on the project design, the evaluation of the project mainly contains two parts. To reach the
+successful criteria, the project must satisfy both functional and performance requirement.
+
+\subsection{Functional Evaluation}
+\subsubsection{stand-alone mode}
+\begin{enumerate}
+  \item User should be able to load and play normal midi files.
+  \item User should be able to play, pause, stop while playing midi file.  
+  \item User should be able to freely adjust tempo.  
+  \item Data visualization component should correctly show the midi note and synchronize with audio stream 
+        while playing the midi file.
+  \item Each track component should match according color on data visualization component.
+  \item Each track component should be able to mute, solo and adjust volume for according track.  
+  \item The player should contain a simple midi library to manage midi files. The library should automatically 
+        remember frequently used midi files.
+  \item The player should provide a complete configuraion interface for the user, all user's setting should 
+        be saved automatically.
+\end{enumerate}
+
+\subsubsection{network mode}
+\begin{enumerate}
+  \item Each instance of midi player runs in its own process space, and should be launched separately by user.
+        After launching, the midi player should automatically connect to a conductor 
+        based on its configuration.
+  \item The conductor communicate with midi player through ZMQ protocol \cite{ZMQ}, adapting the publisher-subscriber 
+        design pattern. The conductor will be ``publisher'' and each midi player will be ``subscriber''. In this process, 
+        The midi player first connect to the conductor and registered as subscriber, conductor will inform all the 
+        subscribers and invoke according callback function once an event happens.
+  \item Multiple instances of midi player should be able to connect to one conductor. 
+  \item After establishing connection with conductor, the midi player should be able to receive tempo informaiton 
+        from conductor and synchronize with it.     
+  \item The conductor should be able to ask certain midi player to load specified configuration file or it could directly 
+        send configuration information through network to midi player.
+  \item 
+    The midi player is compatible with ZeroMQ \cite{zeromq} api, and 4 core functions will be like
+    \begin{itemize}
+      \item play - ask a player to start playing 
+      \item stop - stop a player from playing 
+      \item update time-map - send new time-map to the player 
+      \item set position - set position to certain beat 
+    \end{itemize}
+\end{enumerate}
+
+\subsection{Performance Evaluation}
+\begin{enumerate}
+  \item The midi player GUI part should always response to user input without any delay, and the GUI thread 
+        should not hang there.
+  \item The midi player should response to conductor without significant delay.
+  \item The midi player should use no more than 100MB memory.
+  \item The midi player should use reasonable amount of CPU while playing midi file.
+  \item Hopefully, the midi player shoud not crash without any reason. 
+\end{enumerate}
+
 \section{Future Work}
 This proposal will provide a base for some future work. The Player will  
 be integrated into the HCMP project. Two other features can be
@@ -232,6 +295,9 @@ this feature to provide a powerful audio library management tool.
 
 \bibitem{Dawen:2011}
 Framework for Coordination and Synchronization of Media, D.Liang, G.Xia and R.Dannenberg, NIME 2011.
+
+\bibitem{ZMQ}
+http://www.zeromq.org
 
 \bibitem{zeromq}
 http://sourceforge.net/p/livedisp/wiki/HCMP%20messaging%20protocol/

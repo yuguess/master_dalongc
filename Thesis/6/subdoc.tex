@@ -1,0 +1,301 @@
+% this file is called up by thesis.tex
+% content in this file will be fed into the main document
+
+%: ----------------------- name of chapter  -------------------------
+\chapter{Implementation} % top level followed by section, subsection
+
+
+%: ----------------------- paths to graphics ------------------------
+
+% change according to folder and file names
+\ifpdf
+    \graphicspath{{X/figures/PNG/}{X/figures/PDF/}{X/figures/}}
+\else
+    \graphicspath{{X/figures/EPS/}{X/figures/}}
+\fi
+
+\section{Overview}
+Chapter 5 mainly describe the implemenation detail of HCMP Player. Some 
+pseudocode snippets are given to illustrate the relationship between 
+different components. 
+Focus will be on discussing some implementation related issues. 
+
+\section{Development Environment}
+
+The HCMP Player is developed using script language 
+serpent\cite{Serpent}, serpent is similar to python, which has a simple, 
+minimal syntax , dynamic typing and support for object-oriented programming. 
+The best part of serpent is 
+that it has many convenient builtin functions for midi messages processing, 
+which greatly facilitate developing music-related applications. 
+As for the GUI part, wxWidgets \cite{wxWidget} library provides one of best 
+solution, 
+some core functions and objects has been integrated into the serpent library. 
+The zeromq library is used to develop network related functions, it integrate 
+with common network commmunication functions. The whole project is developed 
+in Linux 32-bit environment, serpent provide a cross-platform solution, 
+so the HCMP Player should also be run in Windows or Mac platform.
+
+\section{GUI Implementation}
+Table 5.1 illustrate the general code structure of GUI component, 
+it firstly parse the configuration file, if there is no configuration file 
+in current working directory, then the HCMP Player will create a new one.
+The configuration is stored 
+at current working directory with name ``\texttt{.player\_config}'', and 
+contains all the HCMP Player  
+related settings, for example, the default remote server address and 
+port number, recently openned file path etc. Configuration is written with plain 
+ASCII text, user could easily modify the configuration. GUI component has 2 
+operations, new and save to create a new configuration file and save current 
+configurations to the file.
+
+After the configuration parsing and initialization job complete, the 
+the GUI begins to create each subcomponents. Each subcomponent has defined its 
+own object construction function. Note that,  to make data accessing easier 
+between different components, we pass in ``this'' (object itself) to each  
+subcomponents.
+\begin{table}[htdp]
+\centering
+\begin{lstlisting}
+
+def GUI {
+  data_init() //parse configuration file
+  create_menu_panel(this) // initialize all the sub-components
+  create_track_panel(this)
+  create_data_panel(this)
+  create_library_panel(this)
+}
+
+\end{lstlisting}
+\caption[GUI Pseudocode Snippet]{GUI Pseudocode Snippet}
+\end{table}
+
+\subsection{Binding Method}
+Table 5.2 is a serpent code snippet, which shows a simple way for GUI object 
+to bind with a method, we bind play button a method, which send a play 
+request to player engine, note that
+the argument of binding method is a string with method name and parameters
+separated by \texttt{;}. The binding function's type is predefined inside 
+serpent, which has 4 prefined arguments. The first argument is object itself, 
+the second arugment is event type, thrid and fourth argument is event position,
+note that not all of the event argument is valid, some events provide 4 arguments, 
+some events may only need 2 arguments. In serpent, all the object event is 
+dispatched through the same user defined fucntion, which give user full power 
+to develop its own customized handlers.
+
+\begin{table}[htdp]
+\centering
+\begin{lstlisting}
+
+Class PlayBtn(button)
+  def init()
+    super.init()
+    this.method = 'send_play'
+
+  def send_play(obj, event, x, y)
+    send_player_engine('play;void')
+
+\end{lstlisting}
+\caption[Binding Method]{Binding Method}
+\end{table}
+
+\subsection{Drawing Canvas}
+ 
+Canvas object define an specified area to be drawable. In serpent, the canvas 
+use the wxWidget canvas object, the canvas object has a full-size bitmap, 
+the drawing method
+first draw on the bitmap, then the whole bitmap is copied to canvas. The code 
+has been special optimized to deal with bitmap-copy, so the efficiency is not 
+big issue. In serpent, a class need to fulfill two conditions in order 
+to be drawable. First condition it
+the class need to be a subclass of canvas class, second condition is the class  
+need to define its own paint method. Table 5.3 illustrate the user defined 
+\texttt{Keyboard} class, which is to draw a keyboard on canvas.
+
+In HCMP Player, there are two classes which adapts canvas class, \texttt{Keyboard} 
+and \texttt{MidiNotes} class, the former draws a 108-key keyboard, the latter
+draws all midi notes into canvas. Each class has a buffer to store all the objects
+need to be drawn. The play engine periodically send ``synchronization'' signal,  
+everytime, GUI receive the signal, it will redraw the whole area.
+
+\begin{table}[htdp]
+\centering
+
+\begin{lstlisting}
+class Keyboard(Canvas)
+    def init(parent, x, y, w, h, b, c)
+      super.init(parent, x, y, w, h)
+
+    def paint(x)
+      draw_octave()
+\end{lstlisting}
+\caption[Serpent Canvas]{Serpent Canvas}
+\end{table}
+
+\section{Player Engine Implementation}
+
+\subsection{Create New Thread}
+Player engine runs inside a separate thread space, when GUI thread complete all
+the subcomponets' initialization work, it will create a new thread, the newly
+spawned thread will execute the player engine code. In table 5.4, we use the   
+\texttt{thread\_create} builtin function of serpent standard library to create 
+new thread, it has 3 arguments, 
+the first argument is to set a period by which newly spawned will wake up and call 
+callback-style function, the mechanism can be used to set a message channel between 
+two threads for communication purposes. The second argument specify 
+which script file to execute for the new thread, the third argument specify the 
+memory size for the new thread.
+
+\begin{table}[htdp]
+\centering
+
+\begin{lstlisting}
+
+g_object = GUI() //complete constructing GUI object
+thread_create(2, "player_engine.srp", 0) // create new thread
+
+\end{lstlisting}
+
+\caption[Create New Thread]{Create New Thread}
+\end{table}
+
+\subsection{Thread Communication}
+
+Serpent has a very primitive multi-thread interface, the thread concept is 
+different from how thread works in C, though serpent 
+thread exist in one process, it does not share any variables and the only 
+communication channel is a message queue. Serpent library provides two
+builtin functions \texttt{thread\_send} and \texttt{thread\_receive} 
+for message passing. Both \texttt{thread\_send} and \texttt{thread\_receive}
+require \texttt{thread\_id} argument, which represent the caller thread Id. 
+Note that the thread 2 need to define a \texttt{portime\_callback} function, 
+in order to periodically check the message queue. Table 5.5 illustrate how 
+two threads send and receive request via \texttt{thread\_send} and 
+\texttt{thread\_receive} functions.
+\begin{table}[htdp]
+\centering
+\begin{lstlisting}
+//thread 1 send request 
+Class PlayBtn(button)
+  def init()
+    super.init()
+    this.method = 'send_play'
+
+  def send_play(obj, event, x, y)
+    thread_send(thread_id, "play;void")
+
+------- separte line -------
+
+//thread 2 receive request 
+def porttime_callback(ms)
+  cmd = thread_receive(thread_id)
+  engine.process_cmd(cmd) //process command string
+\end{lstlisting}
+\caption[Player Engine Pseudocode]{Player Engine Pseudocode}
+\end{table}
+
+\subsection{Player Engine}
+Table 5.6 is a pseudocode snippet of player engine, its main job is to read from  
+GUI component through a message queue, parse the command string(the  
+command string structure is defined chapter 3), and then look up a state-method 
+matrix(refer to table 3.2 and 3.3) fetch the method to transit from current 
+state to new state. Note that this segment of code snippet is also embeded 
+within the \texttt{portime\_callback} function.
+
+
+\begin{table}[htdp]
+\centering
+\begin{lstlisting}
+
+def player_engine {
+  cmd_str = read_from_GUI() //Player engine read request from GUI 
+  cmds = parse_cmd_str(cmd_str) // parse command string into an array
+  method = cmds[0]
+  parameters = cmds[1]
+  apply_function(method, parameters)
+  cur_state = update_state(cur_state, method)
+}
+
+\end{lstlisting}
+\caption[Player Engine Pseudocode]{Player Engine Pseudocode}
+\end{table}
+
+\section{Network Implementation}
+
+\subsection{Initiate Connection}
+Table 5.7 is a pseudocode snippet that illustrate how HCMP Player and   
+Conductor build connection. Basically, it is a remote procedure model.
+With Conductor in client side and HCMP Player in server side, HCMP Player  
+initiate the connection and wait for reply from Conductor. The underlying
+connection related function is provided inside zeromq library.
+
+\begin{table}[htdp]
+\centering
+\begin{lstlisting}
+
+// client side
+def server {
+  srv = socket (context, ZMQ_REP);
+  srv.bind ("tcp://*:5555");
+  srv.send(con_request);
+}
+
+------- separate line -------
+
+// client side
+def client {
+  cli = socket (context, ZMQ_REP);
+  cli.bind ("tcp://*:5555");
+  con_req_str = cli.recv();
+  reply = engine.process_req(con_req_str);
+  cli.send(reply);
+}
+
+\end{lstlisting}
+\caption[Initiate Connection Request]{Initiate Connection Request}
+\end{table}
+
+\subsection{Maintain Connection}  
+Table 5.8 is the pseudocode snippet of observer pattern, 
+which is used by HCMP Player and remote server for network
+communication. 
+The code has two part, subject and dependent, in real 
+implementation, conductor is subject and HCMP Player 
+is dependent. To begin communication 
+, subject need to bind to certain port of local machine first, once 
+a dependent register into the list, the subject begin to ``publish'' 
+messages. In this situation, dependent just wait for comming 
+messages and handle it.
+
+\begin{table}[htdp]
+\centering
+\begin{lstlisting}
+// subject thread 
+def subject {
+  context = zmq_ctx_new ()
+	rc = zmq_bind (subject, "tcp://*:5556");
+	rc = zmq_bind (subject, "ipc://HCMP_Player.ipc");
+
+  while (1) {
+    get_data_from_conductor();
+    s_send (subject, update);
+  }
+  zmq_close ();
+}
+
+// dependent thread 
+def dependent {
+  context = zmq_ctx_new ();
+  subscriber = zmq_socket (context, ZMQ_SUB);
+  rc = zmq_connect (dependent, "tcp://localhost:5556");
+
+  rc = zmq_setsockopt (dependent, ZMQ_SUBSCRIBE)
+  cmd_string = s_recv (dependent);
+  send_player_engine('cmd_str')
+
+  zmq_close ();
+}
+
+\end{lstlisting}
+\caption[Observer Pattern Pseudocode]{Observer Pattern Pseudocode}
+\end{table}

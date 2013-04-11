@@ -1,7 +1,7 @@
 \documentclass[t]{beamer}
 \usetheme{CMU}
+\subtitle{A Proposal for a Music Player \\ for the Human Computer Music Performance Project}
 
-\subtitle{Master Thesis Proposal}
 \date{\today}
 \author[]{Dalong Cheng\textless dalongc@andrew.cmu.edu\textgreater}
 \institute{Institution (Not Used)}
@@ -10,25 +10,32 @@
 \maketitle
 
 \begin{frame}
-\frametitle{Table of Content}
-
-Table of Content
+\frametitle{Introduction}
   \begin{itemize}
-    \item Overview
-      \begin{itemize}
-        \item Why  
-        \item What 
-      \end{itemize}
-    \item Design
-      \begin{itemize}
-        \item Frontend Design 
-        \item Backend  Design
-      \end{itemize}
-    \item Features
-    \item Implementation
-    \item Future Works 
+    \item Interactive Music systems need a flexible midi player 
+    \item Current midi sequencers are hard to integrate 
+    \item Midi libraries do not have sufficient features 
   \end{itemize}
 \end{frame}
+
+%\begin{frame}
+%\frametitle{Table of Content}
+%  \begin{itemize}
+%    \item Overview
+%      \begin{itemize}
+%        \item Why  
+%        \item What 
+%      \end{itemize}
+%    \item Design
+%      \begin{itemize}
+%        \item GUI thread Design 
+%        \item Performer thread Design
+%      \end{itemize}
+%    \item Features
+%    \item Implementation
+%    \item Future Works 
+%  \end{itemize}
+%\end{frame}
 
 \section{Overview}
 
@@ -37,7 +44,6 @@ Table of Content
 \begin{figure}[H] % Example image
 \center{\includegraphics[width=0.4\linewidth]{1.png}}
 \caption{Architecture of HCMP}
-\label{fig:speciation}
 \end{figure}
 Human Computer Music Performance(HCMP) Project
   \begin{itemize}
@@ -50,7 +56,7 @@ Human Computer Music Performance(HCMP) Project
 \frametitle{Overview}
 
   \begin{itemize}
-    \item Conductor, Schduler 
+    \item Conductor, Scheduler 
     \item HCMP Player 
         \begin{itemize}
           \item Especially Tailor For HCMP 
@@ -66,23 +72,22 @@ Human Computer Music Performance(HCMP) Project
 \frametitle{Software Architecture}
 \begin{figure}[H] % Example image
 \center{\includegraphics[width=0.6\linewidth]{2.png}}
-\caption{Architecture of HCMP}
-\label{fig:speciation}
+\caption{Architecture of HCMP Player}
+\label{speciation}
 \end{figure}
 \end{frame}
 
 \begin{frame}
-\frametitle{Control Thread Design}
+\frametitle{GUI Thread Design}
 \begin{figure}[H] % Example image
-\center{\includegraphics[width=0.4\linewidth]{5.png}}
-\caption{Fontend Design}
-\label{fig:speciation}
+\center{\includegraphics[width=0.4\linewidth]{2.png}}
+\caption{GUI Thread Design}
 \end{figure}
 GUI thread 
   \begin{itemize}
     \item Classic client/server model
     \item Response to user action 
-    \item Update canvas based on backend response  
+    \item Update canvas based on performer thread response  
   \end{itemize}
 
 \end{frame}
@@ -92,9 +97,8 @@ GUI thread
 Performer thread
   \begin{itemize}
     \item Communicate with GUI thread via message queue 
-    \item Execute predefine command from GUI thread 
-    \item Update canvas based on backend response  
-    \item Sample API
+    \item Execute predefined command from GUI thread 
+    \item Sample API for GUI thread and Performer thread
   \end{itemize}
   \begin{figure}[H] % Example image
     \center{\includegraphics[width=0.8\linewidth]{6.png}}
@@ -106,7 +110,7 @@ Performer thread
 \frametitle{Network API Support}
   \begin{itemize}
     \item Fully support network control 
-    \item GUI thread will be a proxy for backend  
+    \item GUI thread will be a proxy for performer thread 
     \item Sample API
   \end{itemize}
    \begin{figure}[H] % Example image
@@ -123,7 +127,7 @@ Performer thread
 \end{figure}
 
 \begin{itemize}
-  \item Map different track with color 
+  \item Map different channel with color 
   \item Map midi to note on keyboard  
   \item a Intuitive visualization effect 
 \end{itemize}
@@ -139,7 +143,7 @@ Performer thread
 \end{figure}
 
 \begin{itemize}
-  \item a ''Project'' file to store user setting 
+  \item a ``Project'' file to store user setting 
   \item Manage all the user audio  
   \item Support fetch midi from website  
 \end{itemize}
@@ -150,7 +154,7 @@ Performer thread
 \frametitle{Implementation}
 \begin{itemize}
   \item wxWidget for GUI part   
-  \item Use Serpent for backend  
+  \item Use Serpent for performer thread 
   \begin{itemize}
     \item Many buildin midi message function 
     \item Support multi-thread 
@@ -159,9 +163,27 @@ Performer thread
 \end{itemize}
 \end{frame}
 
-\section{Future Works}
 \begin{frame}
-\frametitle{Future Works}
+\frametitle{Schedule}
+\begin{figure}[H] % Example image
+\center{\includegraphics[width=0.9\linewidth]{8.png}}
+\caption{Schedule Chart}
+\label{fig:speciation}
+\end{figure}
+
+\begin{itemize}
+  \item Network Design - 1 week   
+  \item GUI Design - 2 week 
+  \item Graphic Implementation - 3 week 
+  \item GUI Command Implementation - 3 week
+  \item Performer Thread - 3 week
+  \item Testing - 3 week
+\end{itemize}
+\end{frame}
+
+\section{Future Work}
+\begin{frame}
+\frametitle{Future Work}
 \begin{itemize}
   \item Fully integrated with score display feature 
   \item Integrate with Dawen Liang's previous work

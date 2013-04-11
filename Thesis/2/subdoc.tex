@@ -58,7 +58,7 @@ will not bother to import the same file again.
 
 \begin{figure}[H]
 \center{\includegraphics[width=0.8\linewidth]{2/6.png}}
-\caption{HCMP Midi player menu panel}
+\caption{HCMP Player Menu Panel}
 \label{fig:speciation}
 \end{figure}
 
@@ -71,7 +71,7 @@ track panel will automatically be populated once a midi file is successfully
 loaded into HCMP Player. 
 \begin{figure}[H]
 \center{\includegraphics[width=0.3\linewidth]{2/7.png}}
-\caption{HCMP Midi player track panel}
+\caption{HCMP Player Track Panel}
 \label{fig:speciation}
 \end{figure}
 
@@ -108,7 +108,7 @@ using redraw method is acceptable.
 
 \begin{figure}[H]
 \center{\includegraphics[width=0.7\linewidth]{2/3.png}}
-\caption{Midi data display integrated with vitural keyboard}
+\caption{HCMP Player Data Display Component}
 \label{fig:speciation}
 \end{figure}
 
@@ -127,7 +127,7 @@ agian.
 
 \begin{figure}[H]
 \center{\includegraphics[width=0.3\linewidth]{2/8.png}}
-\caption{HCMP Midi player library}
+\caption{HCMP Player Library Panel}
 \label{fig:speciation}
 \end{figure}
 
@@ -153,8 +153,8 @@ User could use HCMP Player to play midi file, change tempo, change volume, etc.
 \subsection{Network Mode}
 
 After launching the HCMP Player, if user click the network button, 
-the HCMP player will enter into    
-the network mode. At the beginning, it will initiate a connection 
+the HCMP player will try to enter into    
+the network mode. At the beginning, it initiate a connection request 
 to remote server, the address and port number will stored in the
 HCMP Player configuration file. If receving no reply within certain 
 timeout period, the HCMP player ``rollback'' to its stand-alone mode.
@@ -162,9 +162,9 @@ If receving confirm signal from
 remote server, the 2-way connection between the HCMP Player and 
 remote server is successfully built up. Then, the HCMP Player and 
 remote server is able to communicate with each other. The control of HCMP 
-Player will be ``transfered'' to remote server. 
+Player will partially be ``transfered'' to remote server. 
 In this mode, player control buttons like play, pause   
-, stop will work as normal, to avoid conflict problems, other buttons will 
+, stop still work as normal, to avoid conflict problems, other buttons will 
 be temporarily disabled, which means binding method for these buttons is replaced by
 another set of functions. The detailed network API information will be explained  
 in the chapter 5.
