@@ -17,56 +17,66 @@
 %: ----------------------- contents from here ------------------------
 
 \section{Overview}
-In this chapter, I mainly describe the evaluation of project. Questions 
-like what is the successful criteria of the project, how is the performance 
-like for the HCMP Player will be anwsered. I fristly define the successful 
-criteria and list required features for the HCMP Player, then, describe  
-the test plan for the HCMP Player.
+Chapter 6 mainly focus on evaluation of the project. In 
+this chapter, we define the successful criteria of the project and discuss
+how to meet those requirements. A complete list of required features is
+listed. At last part of chapter, we also make brief performance test and 
+discuss some potential performance issues.
 
 \section{Functional Evaluation}
-Based on the project design, the evaluation of the project mainly contains 
-two parts. To reach the successful criteria, the project must satisfy 
-both functional and performance requirement. The functional requirements  
-are basic function of the HCMP Player, each functional requirement will be 
-either manully tested or automatically tested by scripts. 
+Based on the project design from previous chapters, the evaluation of the 
+project mainly contains 
+two parts. To reach the successful criteria, the project not only need to 
+satisfy the functional requirement but also all of performance requirements. 
+The 
+functional requirement cover all the basic function of the HCMP Player, 
+each functional requirement will be 
+either manully tested or automatically tested by scripts. As for the
+performance test, some code segment will be added to original program to
+test the general performance issues.
 
 \subsection{Stand-alone Mode Requirement}
 \begin{enumerate}
   \item User should be able to load and play normal midi files.
   \item User should be able to play, pause, stop while playing midi file.  
-  \item User should be able to freely adjust tempo.  
+  \item User should be able to freely adjust tempo, while plying the midi file.   
   \item Data visualization component should correctly show the midi note 
-    and synchronize with audio stream while playing the midi file.
-  \item Each track component should match according color on data visualization component.
-  \item Each track component should be able to mute, solo and adjust volume 
-        for according track.  
+        and synchronize with audio stream while playing the midi file.
+  \item Each track component should match to color on data visualization component.
+  \item Each track component should be able to mute, solo and adjust volume.  
   \item The player should contain a simple midi library to manage midi files. 
-        The library should automatically remember frequently used midi files.
+        The library should automatically remember recently imported midi files.
   \item The player should provide a complete configuraion interface for the 
         user, all user's setting should be saved automatically.
+  \item The configuration of HCMP Player should be saved into a file.
 \end{enumerate}
 
 \subsection{Network Mode Requirement}
 \begin{enumerate}
-  \item Each instance of midi player runs in its own process space, and 
-        should be launched separately by user. After launching, the midi 
-        player should automatically connect to a conductor based on its configuration.
-  \item The conductor communicate with midi player through ZMQ protocol \cite{ZMQ}, 
-        adapting the publisher-subscriber design pattern. The conductor will 
-        be ``publisher'' and each midi player will be ``subscriber''. In this process, 
-        The midi player first connect to the conductor and registered as subscriber, 
-        conductor will inform all the 
-        subscribers and invoke according callback function once an event happens.
+  \item Each instance of HCMP Player runs in its own process space, one player 
+        should not effect other player's function or performance. 
+        
+  \item Each HCMP Plyaer should be launched separately by user. After 
+        launching, the midi player should automatically connect to a conductor 
+        based on its configuration.
+
+  \item If HCMP Player failed to establish connection with remote server, it should  
+        be rollback to stand-alone mode without crashing.
+  \item The Conductor communicate with midi player through a predefined API, 
+        the API is defined in Chpater 5. After establishing connection with remote   
+        server, HCMP Player should register into Conductor's dependent list.   
+        Once received command, the Conductor send message to all HCMP Player that    
+        previously registered in the dependent list. 
 
   \item Multiple instances of midi player should be able to connect to one conductor. 
   \item After establishing connection with conductor, the midi player 
-    should be able to receive tempo informaiton 
-        from conductor and synchronize with it.     
-  \item The conductor should be able to ask certain midi player to 
-    load specified configuration file or it could directly 
-        send configuration information through network to midi player.
+        should be able to receive tempo informaiton from conductor and 
+        synchronize with it.     
+  \item The conductor should be able to explicitly command certain midi player to 
+        load specified configuration file or it could directly 
+        send configuration information through network to that midi player.
   \item 
-    The midi player is compatible with ZeroMQ \cite{zeromq} api, 
+    The HCMP Player is compatible with ZeroMQ \cite{zeromq} api, 
     and 4 core functions will be like
     \begin{itemize}
       \item play - ask a player to start playing 
@@ -78,13 +88,12 @@ either manully tested or automatically tested by scripts.
 
 \subsection{Performance Requirement}
 \begin{enumerate}
-  \item The midi player GUI part should always response to user input without 
-        any delay, and the GUI thread should not hang there.
-  \item The midi player should response to conductor without significant delay.
-  \item The midi player should use no more than 100MB memory.
-  \item The midi player should use reasonable amount of CPU while playing midi file.
+  \item The HCMP Player GUI part should always response to user input without 
+        significant delay, and the GUI thread should not hang there.
+  \item The HCMP Player should response to conductor without significant delay.
+  \item The HCMP Player should use no more than 100MB memory.
+  \item The HCMP Player should use reasonable amount of CPU while playing midi file.
   \item Hopefully, the midi player shoud not crash without any reason. 
 \end{enumerate}
 
 \section{Test Plan}
-

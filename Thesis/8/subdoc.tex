@@ -1,0 +1,46 @@
+% this file is called up by thesis.tex
+% content in this file will be fed into the main document
+
+%: ----------------------- name of chapter  -------------------------
+\chapter{Conclusion} % top level followed by section, subsection
+
+
+%: ----------------------- paths to graphics ------------------------
+
+% change according to folder and file names
+\ifpdf
+    \graphicspath{{X/figures/PNG/}{X/figures/PDF/}{X/figures/}}
+\else
+    \graphicspath{{X/figures/EPS/}{X/figures/}}
+\fi
+
+%: ----------------------- contents from here ------------------------
+
+\section{Conclusion}
+In concolusion, my project implement a midi player, which is able to 
+either play local midi file or connect to a remote server. The midi player  
+will be a sub-module of the whole HCMP Project. With the unified APIs,  
+HCMP Player can be easily extend for other usage, or integrated into 
+more sophiscated project. I split the whole HCMP Player into 3 parts,  
+GUI, player engine and network function. The design of each feature  
+is explained in detail in previous chapters. I also briefly decribe 
+implementation detail for each HCMP Player's component, as supplementary,
+some pseucode segment is provide to illustrate logic. At the end, complete 
+HCMP Player features is listed and a successful criteria is defined to
+help evaluate the project.
+
+
+
+\section{Future Work}
+This project provide a base for some potential future works. Two other 
+features can be added to extend the Player's function. There is a music score display 
+component for the HCMP project, with clearly defined API, the HCMP Player can 
+be easily extended as a default player for music display component. 
+Display with the addition of a midi score follower, 
+the music display could be synchronized 
+to a live keyboard performance and the Player could play an accompaniment 
+part and the user can read the score from the Player's virtual keyboard. 
+Dawen Liang's previous work \cite{Dawen:ISMIR2011}on music database provide 
+user a convenient way to record, organize
+and retrieve audio information from various sources. The Player can further integrate 
+this feature to provide a powerful audio library management tool.
