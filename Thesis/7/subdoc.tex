@@ -97,3 +97,56 @@ test the general performance issues.
 \end{enumerate}
 
 \section{Test Plan}
+\subsection{Functional Test}
+Functional test aims to test all the features list above, some of key test 
+cases are list below.
+\begin{itemize}
+  \item Test case 1 -- load 10 different midi files, each has different length, 
+        including a ill midi file, play, pause and stop. 
+  \item Test case 2 -- load 10 different midi files, change tempo from high to 
+        low, and then from low back to high, change the tempo every 0.5 second.
+  \item Test case 3 -- load 10 different midi files, use track panel to mute
+        from first track to last track, then do the similar action with volume
+        adjust.
+  \item Test case 4 -- load 10 different midi files in HCMP Player library, click
+        each track to import, then delete all the files in disk, and clikc each 
+        track again.  
+  \item Test case 5 -- create a virtual conductor and create a HCMP Player use  
+        network function to connect to conductor. Conductor issue command
+        to test each network API and make sure its work properly. 
+  \item Test case 6 -- create a virtual conductor and create 10 HCMP Players. 
+        All connected to conductor. Conductor issue command to test each network
+        API and make sure its work properly.
+  \item Test case 7 -- create a virtual conductor and create a HCMP Player to connect
+        to conductor. While HCMP Player playing the file, cut the network connection,
+        and HCMP Player behave properly.
+  \item Test case 8 -- create a virtual conductor and create 10 HCMP Players, all
+        connect to conductor. Conductor explicitly ask each HCMP Player to play with
+        certian configuration file.
+\end{itemize}
+
+\subsection{Perfermance Test}
+Performance test aims to test the general performance of HCMP Player. Two important  
+aspects for performance test are canvas redraw test and midi event test. 
+
+As described in previous chapters, canvas redraw the whole bitmap everytime 
+the beat update, the bitmap will be updated approximately 20 times per second.
+Even though the bitmap size is relatively small, it still possible to become a bottelneck
+for the whole system, any inefficiency in the code will lead to GUI lag or hang there
+without responding to user input. The test case 1 try to measure the general 
+accumlative time spent on redrawing. 
+
+Another issue is about midi event, the player engine use real-time scheduler to  
+contantly poll and execute event, ideally, the event is dispatched at its 
+schedule time, or at least we should control so that event dispatched within 
+certain limited time, the test case 2 aims to measure the overall latency between 
+ideal schedule time and actual dispatch time. 
+\subsubsection{Performance Test Case}
+\begin{itemize}
+  \item Test case 1 -- measure the time between canvas redraw segment code, and add 
+        each redraw time together to gain total time spend on drawing, calculate the 
+        ratio of redraw time and total time.
+  \item Test case 2 -- In player engine, after the event has been dispatched, 
+        check the ideal time stored in that event, and get current time, calculate 
+        the latency. change the tempo, and measure the latency again.
+\end{itemize}
