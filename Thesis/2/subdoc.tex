@@ -4,11 +4,12 @@
 \chapter{Graphic User Interface Design} % top level followed by section, subsection
 
 \section{Overview}
-In chapter 2, I mainly describe the GUI design of the HCMP Player, focus will 
-be on how GUI design meet the requirement of HCMP Player, and each GUI components' 
-usage and function. Basicly, the GUI of HCMP Player contains 5 components, 
+In chapter 2, I will describe the GUI design of the HCMP Player, focusing 
+be on how the GUI design meets the requirement of the HCMP Player. I will describe
+each GUI components' 
+usage and function. The GUI of the HCMP Player contains 5 components, 
 a detailed explaination of each component will be given in following sections. 
-Figure 2.1 is a screenshot of GUI of HCMP Player. 
+Figure 2.1 is a screenshot of GUI of the HCMP Player. 
 
 \begin{figure}[H]
 \center{\includegraphics[width=0.75\linewidth]{2/1.png}}
@@ -17,14 +18,14 @@ Figure 2.1 is a screenshot of GUI of HCMP Player.
 \end{figure}
 
 \section{Layout}
-Figure 3 is layout of the GUI of HCMP Player. The whole area 
-cover 800 * 600 pixels. The top part is the menu panel with 800 * 200 in size. 
-Track panel and 
-library panel share the middle-left part, ecah is 200 * 200 in size. 
-The middle-right part is 400 * 600 in size, which covers the most part of GUI, will be   
-a midi keyboard and data display component. The bottom part is the channel   
-panel. The bound every component to its own area, I put a container panel at most 
-outside layer. The container panel define the boundary GUI of HCMP Player. Any 
+Figure 3 is a layout of the GUI of HCMP Player. The whole area 
+covers 800 * 600 pixels. The top part is the menu panel 800 * 200 pixels in size. 
+The track panel and 
+library panel share the middle-left part, each is 200 * 200 pixles in size. 
+The middle-right part is 400 * 600 pixels in size, and covering the most of the GUI, 
+it will hold a midi keyboard and data display component. To bottom part is the channel   
+panel. The bound every component to its own area, I put a container panel at the outmost 
+layer. The container panel defines the boundary of the GUI of the HCMP Player. Any 
 component out of this boundary is invible to users. 
 
 \begin{figure}[H]
@@ -37,24 +38,26 @@ component out of this boundary is invible to users.
 
 \subsection{Menu Panel}
 
-Figure 2.3 is the screenshot of menu panel. The menu panel integrate most of control 
-functions for HCMP Player. New, open, save buttons form a group, the group is used to 
-manipulate configuration file. Play, pause, stop buttons form another group, 
-the group is used to directly control the HCMP Player. 
-The function of each button just like its name suggest. The network button 
-is for HCMP Player  
-network function, after clicking the button, the player will try to automatically 
+Figure 2.3 is a screenshot of the menu panel. The menu panel integrates most of the control 
+functions for the HCMP Player. New, open and save buttons form a group. The group is used to 
+manipulate the configuration file. Play, pause and stop buttons form another group, 
+this group is used to directly control the HCMP Player. 
+The function of each button is just like its name suggest. The network button 
+is for the HCMP Player  
+network function, after clicking the button, the player will automatically 
 initiate a connection to a remote server, the IP address and port number pair is 
-predefined in configuration file and can be easily changed. Once connection is 
-successfully built, all the control will then be transferred to the remote server. 
+predefined in the configuration file and can be easily changed. Once the connection is 
+successfully built, all controls will be transferred to the remote server. 
 This function will be explained in more detail in following
-chapters. Apart from those buttons, menu panel also contain a slider to change 
-tempo, the slider inidicate the scale coefficient of tempo value.For example, if the original tempo is 90 BMP, with slider set to scale coefficient 1.5, the tempo will be 1.5 * 90 
+chapters.The menu panel also contains a slider to change 
+tempo. The slider inidicate the scale coefficient of tempo value. For example, 
+if the original tempo is 90 BMP, and the slider is set to scale coefficient 1.5, 
+the tempo will be 1.5 * 90 
 BMP when playing the file. The import button is used to import a midi file 
 into the HCMP Player, once a midi file is successuflly imported into the HCMP Player  
-, track panel, library panel and data display component will all be updated. 
-The path of track will also be recorded into the configuration file, so that the user 
-will not bother to import the same file again.
+, the track panel, library panel and data display component will be updated. 
+The track path will also be recorded into the configuration file, so that the user 
+will not need to import the same file again.
 
 \begin{figure}[H]
 \center{\includegraphics[width=0.8\linewidth]{2/6.png}}
@@ -64,11 +67,11 @@ will not bother to import the same file again.
 
 \subsection{Track Panel}
 
-Figure 2.4 is the screenshot of track panel. The track panel is used to 
-control each track's parameter, these parameters are volume, solo, mute. Color
-block at the front of panel indicate its color in data display component . The 
+Figure 2.4 is a screenshot of the track panel. The track panel is used to 
+control each track's parameters, volume, solo, mute. The color
+block at the front of panel indicates its color in the data display component . The 
 track panel will automatically be populated once a midi file is successfully 
-loaded into HCMP Player. 
+loaded into the HCMP Player.
 \begin{figure}[H]
 \center{\includegraphics[width=0.3\linewidth]{2/7.png}}
 \caption{HCMP Player Track Panel}
@@ -76,32 +79,32 @@ loaded into HCMP Player.
 \end{figure}
 
 \subsection{Midi Keyboard and Data Display}
-Figure 2.5 is the screenshot of data display component. It is made up of a virtual  
+Figure 2.5 is a screenshot of the data display component. It is made up of a virtual  
 keyboard and a midi note canvas. After successfuly loading a midi file, the midi 
 note canvas will 
-draw each midi note to this area. When playing a midi file, midi canvas will 
+draw each midi note in this area. When playing a midi file, the midi canvas will 
 automatically update the position of each midi note. 
 
-The virtual keyboard has 9 octaves and 108 keys. Both the white key and black key 
-are drawn by canvas. Every midi note will be highlighted in the 
-virtual midi keyboard based on its pitch while playing. To avoid asynchronized speed 
-of canvas update and playing midi note problem. The canvas update speed is 
+The virtual keyboard has 9 octaves and 108 keys. Both the white and black keys 
+are drawn by the canvas. Every midi note will be highlighted in the 
+virtual midi keyboard, based on its pitch, while playing. This avoids asynchronized speed 
+of canvas update and playing midi note problems. The canvas update speed is 
 coordinited with the player engine. Player engine is responsible for beat update and it 
-periodically send synchronization information to GUI. After receiving update 
-information from player engine, the GUI will update all the midi note in canvas.
+periodically sends synchronization information to the GUI. After receiving updated 
+information from the player engine, the GUI will update all midi notes in canvas.
 
-Each color of midi note represent a track inside 
-a midi file, in current version, color for each track's midi note is predefined. 
-Midi canvas scroll speed is linear to the tempo of midi. Whenever user 
-make a change to the tempo, the scroll speed of midi canvas will also be adjusted 
-accordingly. When a user mute certain 
+Each color of the midi note represents a track inside 
+a midi file. In the current version, the color for each track's midi note is predefined. 
+Midi canvas scroll speed is linear to the tempo of midi. Whenever a user 
+makes a change to the tempo, the scroll speed of the midi canvas will adjust
+accordingly. When a user mutes a
 track, its color midi note in midi canvas will temporarily be set to invisble. 
 The canvas
-update frequency is about 20Hz. To make logic easier, everytime update event 
-happened, the whole midi canvas will be redrawed. The midi canvas is about 400 * 600 
-in size, and these pixels are update 20 times every second, which is approximately 
+update frequency is 20Hz. To make logic easier, everytime an update event 
+happens, the whole midi canvas will be redrawn. The midi canvas is 400 * 600 pixels 
+in size, and these pixels are updates 20 times every second, which is approximately 
 20 frames per second. The performance is not
-a major concern. There is canvas buffer data 
+a major concern. There is a canvas buffer data 
 structure to store all the ``visble'' midi notes. 
 Usually, the size of a midi file is no more than 10MB, the overall performance of 
 using redraw method is acceptable.
