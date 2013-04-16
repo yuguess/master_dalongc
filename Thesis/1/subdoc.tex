@@ -9,48 +9,51 @@
 
 \section{Overview}
 Computers have been widely used in music performances for many years. Some
-advanced systems use the computer as an independent module to replace a
+advanced systems use the computer as a independent module to replace a
 single instrument in an orchestra. In popular music computers have proved
-particularly successful. Both classical and popular music have many
+to be particularly successful. Both classical and popular music have many
 opportunities for innovative applications used by highly intelligent and
 coordinated computer music systems. With more powerful algorithms and more
 advanced sensing devices, computer music systems have the potential to
-replace musicians ultimately to inspire new musical directions based on new
-capabilities and concepts from new technologies.
+replace musicians. In the future, computer music systems will inspire new 
+musical directions based on new
+capabilities and generate new concepts from new technologies.
 
 Live popular music offers a wealth of opportunities for computing and music
-research.  We term the integration of computers  as independent autonomous
-per- formers into popular live music performances Human Computer Music
+research.  We term the integration of computers as independent autonomous
+performers into popular live music performances as Human Computer Music
 Performance (HCMP). In HCMP computers become more than instruments and are,
 in some degree, seen as performers. To bring HCMP into the realm of popular
-music performance, certain problems need to be solved. One problem is that
+music performance, certain problems need to be solved. 
+
+One problem is that
 popular music is organized around a tight synchronization to beats and a
 computer cannot reliably and efficiently adapt to human tempo variations.
 Another significant problem is that an HCMP project is a large complex
-system which many components, each one relying on the cooperation of several
+system which contain many components, each one relying on the cooperation of several
 different subcomponents to complete its task.
 
 The motivation behind the HCMP Player is to provide a good solution to these
-problems. When successful the HCMP Player will display different
+problems. When successful, the HCMP Player will display different
 representations of music, work as an accompaniment  and quickly adjust its
 tempo to follow the performer. A clearly defined programming interface is
 also required in order to foster communication and cooperation with all
 components within the system. To create such a player, we must coordinate
 time between different media. We need at least two functional components,
-one component working as "backend" and responsible for coordinating and
-scheduling different music events, the other working as "frontend" will
+one component working as ``backend'' and responsible for coordinating and
+scheduling different music events, the other, working as ``frontend'', will
 receive commands from the user or other components and dynamically adjust
 play sequence and tempo based on those requests.
 
 This paper begins with the role of the HCMP Player in the HCMP project. Then
-the "big picture of" of the HCMP project will be discussed, followed by a
-presentation of the individual HCMP components. Finally the question how
+the ``big picture of'' of the HCMP project will be discussed, followed by a
+presentation of the individual HCMP components. Finally the question that how
 does the HMCP Player fit into the whole picture will be addressed. In the
 following three chapters design issues with the HCMP Player are addressed.
 Each chapter approaches the problem from a different perspective. Chapter 2
 describes the design of Graphic User Interface (GUI) of HCMP Player together
 with a detailed explanation of all the GUI components' usage and function.
-Chapter 3 describes the "backend" of the HCMP Player - the player engine,
+Chapter 3 describes the ``backend'' of the HCMP Player - the player engine,
 and illustrates how the player engine cooperates and communicates with the
 GUI to complete external requests. Chapter 4 addresses the network
 communication problem between multiple players. A set of unified API is
@@ -59,8 +62,8 @@ project.  Chapter 5 describes the implementation details of the HCMP Player
 and includes pseucode to provide a clear explanation of this. Chapter 6
 focuses on the evaluation of the HCMP Player, a full list of feature points
 will be given and a clear success criteria used to evaluate the HCMP Player
-will be defined.  In chapter 7 I summarize my work and propose possible
-future works and an extension of the project.
+will be defined.  In chapter 7, I summarize my work and propose possible
+future works.
 
 \section{Background}
 
@@ -135,7 +138,7 @@ Hopefully, HCMP does not require a human operator's interfere, the system itself
 is designed to be adaptive and responsive. With sophisticated listening and sensing
 component, HCMP is able to adjust related system parameters in real-time during 
 performance. From functional perspective, we can divide HCMP into two main
-categories: music preparation and music performance. With music preparation
+categories: music preparation and music performance. Music preparation
 part aims to work and understand with multiple music representations. Music
 performance part is to deal with various issues regarding to question 
 how to play music.     
