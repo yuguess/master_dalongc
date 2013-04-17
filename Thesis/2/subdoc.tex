@@ -9,7 +9,9 @@ on how the GUI design meets the requirement of the HCMP Player. I will describe
 each GUI components' 
 usage and function. The GUI of the HCMP Player contains 5 components, 
 a detailed explaination of each component will be given in following sections. 
-Figure 2.1 is a screenshot of GUI of the HCMP Player. 
+Figure 2.1 is a screenshot of GUI of the HCMP Player. At the last seciton, I will 
+also talk about the mode of the HCMP Player. The HCMP Player has two modes, 
+stand-alone and network mode. Each mode's function and usage will be discussed.
 
 \begin{figure}[H]
 \center{\includegraphics[width=0.75\linewidth]{2/1.png}}
@@ -18,15 +20,17 @@ Figure 2.1 is a screenshot of GUI of the HCMP Player.
 \end{figure}
 
 \section{Layout}
-Figure 3 is a layout of the GUI of HCMP Player. The whole area 
-covers 800 * 600 pixels. The top part is the menu panel 800 * 200 pixels in size. 
-The track panel and 
-library panel share the middle-left part, each is 200 * 200 pixles in size. 
+Figure 3 is a layout of the GUI of HCMP Player. We use absolute position layout 
+to arrange each component. Each component is a subclass of Panel object. 
+The whole area 
+covers 800 * 600 pixels. The top part is the menu panel 800 * 200 pixels 
+in size. The track panel and 
+the library panel share the middle-left part, each is 200 * 200 pixles in size. 
 The middle-right part is 400 * 600 pixels in size, and covering most part of the GUI, 
 it will hold a midi keyboard and data display component. The bottom part is the channel   
 panel. To bound every component to its own area, I put a container panel at the outmost 
 layer. The container panel defines the boundary of the GUI of the HCMP Player. Any 
-component out of this boundary is invible to users. 
+component out of this boundary will be invible to users.
 
 \begin{figure}[H]
 \center{\includegraphics[width=0.6\linewidth]{2/5.png}}
@@ -54,7 +58,7 @@ tempo. The slider indicates the scale coefficient of tempo value. For example,
 if the original tempo is 90 BMP, and the slider is set to scale coefficient 1.5, 
 the tempo will be 1.5 * 90 
 BMP when playing the file. The import button is used to import a midi file 
-into the HCMP Player, once a midi file is successuflly imported into the HCMP Player  
+into the HCMP Player, once a midi file is successfully imported into the HCMP Player  
 , the track panel, library panel and data display component will be updated. 
 The track path will also be recorded into the configuration file, so that the user 
 will not need to import the same file again.
@@ -68,9 +72,9 @@ will not need to import the same file again.
 \subsection{Track Panel}
 
 Figure 2.4 is a screenshot of the track panel. The track panel is used to 
-control each track's parameters, volume, solo, mute. The color
+control each track's parameters, volume, solo, mute etc. The color
 block at the front of panel indicates its color in the data display component . The 
-track panel will automatically be populated once a midi file is successfully 
+track panel will be automatically populated once a midi file is successfully 
 loaded into the HCMP Player.
 \begin{figure}[H]
 \center{\includegraphics[width=0.3\linewidth]{2/7.png}}
@@ -87,11 +91,13 @@ automatically update the position of each midi note.
 
 The virtual keyboard has 9 octaves and 108 keys. Both the white and black keys 
 are drawn by the canvas. Every midi note will be highlighted in the 
-virtual midi keyboard, based on its pitch, while playing. This avoids asynchronized speed 
-of canvas update and playing midi note problems. The canvas update speed is 
-coordinited with the player engine. Player engine is responsible for updatting beat and it 
+virtual midi keyboard, based on its pitch, while playing. The canvas update speed is 
+coordinited with the player engine. This avoids asynchronized speed 
+of canvas update and playing midi note problems. The Player engine is responsible for 
+updatting beat and it 
 periodically sends synchronization information to the GUI. After receiving updated 
-information from the player engine, the GUI will update all midi notes in canvas.
+information from the player engine, the GUI will update all midi notes in canvas and redraw
+the whole canvas.
 
 Each color of the midi note represents a track inside 
 a midi file. In the current version, the color for each track's midi note is predefined. 
@@ -103,9 +109,9 @@ The canvas
 update frequency is 20Hz. To make logic easier, everytime an update event 
 happens, the whole midi canvas will be redrawn. The midi canvas is 400 * 600 pixels 
 in size, and these pixels are updates 20 times every second, which is approximately 
-20 frames per second. The performance is not
+20 frames per second, thus the performance is not
 a major concern. There is a canvas buffer data 
-structure to store all the ``visble'' midi notes. 
+structure to store all the ``visble'' midi notes inside data display object . 
 Usually, the size of a midi file is no more than 10MB, the overall performance of 
 using redraw method is acceptable.
 
@@ -125,7 +131,7 @@ recently openned midi files immediately. When a user clicks any file in the liba
 the GUI looks up a hash-like data structure and fetches its file path (if it exists),
 it then automatically
 loads this information into the HCMP Player. If the midi file failed to load, the library and its
-configuration file will remove the obsolete entry an before updating the library panel.
+configuration file will remove the obsolete entry, then updating the library panel.
 
 \begin{figure}[H]
 \center{\includegraphics[width=0.3\linewidth]{2/8.png}}
