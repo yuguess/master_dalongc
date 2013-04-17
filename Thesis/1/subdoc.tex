@@ -20,22 +20,22 @@ musical directions based on new
 capabilities and generate new concepts from new technologies.
 
 Live popular music offers a wealth of opportunities for computing and music
-research.  We term the integration of computers as independent autonomous
+research.  We refer to the integration of computers as independent autonomous
 performers into popular live music performances as Human Computer Music
-Performance (HCMP). In HCMP computers become more than instruments and are,
-in some degree, seen as performers. To bring HCMP into the realm of popular
+Performance (HCMP). In HCMP, computers become more than instruments and are,
+to some degree, seen as performers. To bring HCMP into the realm of popular
 music performance, certain problems need to be solved. 
 
 One problem is that
-popular music is organized around a tight synchronization to beats and a
+popular music is organized around a tight synchronization to beats, and a
 computer cannot reliably and efficiently adapt to human tempo variations.
 Another significant problem is that an HCMP project is a large complex
-system which contain many components, each one relying on the cooperation of several
+system which contains many components, each one relying on the cooperation of several
 different subcomponents to complete its task.
 
 The motivation behind the HCMP Player is to provide a good solution to these
 problems. When successful, the HCMP Player will display different
-representations of music, work as an accompaniment  and quickly adjust its
+representations of music, work as an accompanist and quickly adjust its
 tempo to follow the performer. A clearly defined programming interface is
 also required in order to foster communication and cooperation with all
 components within the system. To create such a player, we must coordinate
@@ -43,54 +43,59 @@ time between different media. We need at least two functional components,
 one component working as ``backend'' and responsible for coordinating and
 scheduling different music events, the other, working as ``frontend'', will
 receive commands from the user or other components and dynamically adjust
-play sequence and tempo based on those requests.
+play sequences and tempo based on those requests.
 
 This paper begins with the role of the HCMP Player in the HCMP project. Then
 the ``big picture of'' of the HCMP project will be discussed, followed by a
-presentation of the individual HCMP components. Finally the question that how
-does the HMCP Player fit into the whole picture will be addressed. In the
+presentation of the individual HCMP components. Finally the question of how
+the HMCP Player fits into the whole picture will be addressed. In the
 following three chapters design issues with the HCMP Player are addressed.
 Each chapter approaches the problem from a different perspective. Chapter 2
-describes the design of Graphic User Interface (GUI) of HCMP Player together
+describes the design of Graphical User Interface (GUI) for the HCMP Player together
 with a detailed explanation of all the GUI components' usage and function.
 Chapter 3 describes the ``backend'' of the HCMP Player - the player engine,
 and illustrates how the player engine cooperates and communicates with the
 GUI to complete external requests. Chapter 4 addresses the network
-communication problem between multiple players. A set of unified API is
-defined to make the HCMP Player compatible with other components in the HCMP
+communication problem between multiple players. A API is
+defined to integrate the HCMP Player with other components in the HCMP
 project.  Chapter 5 describes the implementation details of the HCMP Player
-and includes pseucode to provide a clear explanation of this. Chapter 6
-focuses on the evaluation of the HCMP Player, a full list of feature points
+and includes pseudocode to provide a clear explanation of this. Chapter 6
+focuses on the evaluation of the HCMP Player. A full list of features
 will be given and a clear success criteria used to evaluate the HCMP Player
-will be defined.  In chapter 7, I summarize my work and propose possible
+will be defined. In Chapter 7, I summarize my work and propose possible
 future works.
 
 \section{Background}
 
-Before making a formal introduction to the background of HCMP Player. 
-I would like to make short review of  
-some existed human computer music systems. The most common use of computer in
-music performance is through computer instruments, typically keyboards.
+Before making a formal introduction to the background of HCMP Player, 
+I would like to make a short review of  
+some existing human computer music systems. The most common use of computers in
+music performance is in computer instruments, typically keyboards.
 These, and other electronic instruments, are essentially substitutes for traditional
 instruments and rely upon human musicians for their control and coordination with
-other musicians. Many composers of interactive contemporary art music use computers
-to generate music in real time, often in response to live performers.
+other musicians. 
 
-Another meaningful use of computer in music is computer accompaniment system 
+Many composers of interactive contemporary art music use computers
+to generate music in real time, often in response to live performers.
+These systems are rarely capable of synchronizing to rhythmic playing
+so these techniques are not very useful for traditional or popular music 
+forms.
+
+Another use of the computer in music is in computer accompaniment systems 
 \cite{Roger:89}, 
-whcih solves the synchronization problem by assuming a pre-determined 
+whcih solve the synchronization problem by assuming a pre-determined 
 score (music notation). During the performance, a performer expressively 
-played music score, while the accompaniment system ``listen'' and analysis, 
+plays music score while the accompaniment system ``listens'' and make a analysis, 
 then follows the performer 
 in the score and synchronizes an accompaniment.
 
-In live popular music peformance, computer is quite useful too.
+In live popular music peformance, computers can be quite useful too.
 The computer has had a significant
 impact on popular music through drum machines, sequencers and loop-based
 interfaces, but one can argue that popular music has adapted to new technology
 rather than the other way around. The sound and beat of drum machines seems stiff,
 mechanical, and monotonous to many musicians, but that became the trance-like
-foundation of club dance music and other forms . Similarly, 
+foundation of club dance music and other forms. Similarly, 
 the inability of
 sequencers and other beat-based software to “listen” to human musicians has led to
 performances with click tracks in fixed media or simply a fixed drum track that live
@@ -101,7 +106,7 @@ musicians. Robertson and Plumbley \cite{Robertson:2007} used a real-time beat
 tracker in
 conjunction with Ableton Live software to synchronize pre-recorded music 
 to a live drummer. This extension could be considered HCMP.
-The table 1.1 summarize some of existed computer music systems and their usage.
+Table 1.1 summarizes some existing computer music systems and their usage.
 
 \begin{table}[htdp]
 \centering
@@ -133,23 +138,25 @@ traditional/classical music.\\
 
 \section{Objective}
 The objective of HCMP \cite{Dawen:2011} is to create an autonomous 
-``artificial performer'' with the ability of a human-level musical performance. 
-Hopefully, HCMP does not require a human operator's interfere, the system itself 
-is designed to be adaptive and responsive. With sophisticated listening and sensing
-component, HCMP is able to adjust related system parameters in real-time during 
-performance. From functional perspective, we can divide HCMP into two main
-categories: music preparation and music performance. Music preparation
-part aims to work and understand with multiple music representations. Music
-performance part is to deal with various issues regarding to question 
-how to play music.     
+``artificial performer'' with the ability of a human musical performer. 
+Ideally, HCMP should not require a human operator instead, the system itself 
+be adaptive and responsive. With a sophisticated listening and sensing
+component, HCMP is able to adjust system parameters in real-time during 
+performance. 
+
+From a functional perspective, we can divide HCMP into two main
+categories: music preparation and music performance. The music preparation
+part aims to work with and understand multiple music representations in order
+to prepare material for performance. The music
+performance part deals with music.     
 
 An important component of the music performance part is the HCMP Player, 
 which is able to flexibly  
-adjust and respond to changes of music signal. Figure 1 illustrates relationship 
-between scheduler, conductor and HCMP Plyaer. During performance, the HCMP Player will 
+adjust and respond to changes of music signal. Figure 1 illustrates the relationship 
+between the scheduler, conductor and HCMP Plyaer. During performance, the HCMP Player will 
 be controlled by conductor and constantly receive control messages 
-from its conductor. In this project, I will design, implement the HCMP midi player 
-for the HCMP project that is able to fully cooperate with conductor and scheduler.
+from the conductor. In this project, I have designed, and implemented the HCMP midi player 
+for the HCMP project.
 \begin{figure}[H] % Example image
 \center{\includegraphics[width=0.65\linewidth]{1/1.png}}
 \caption{Key Components of HCMP}
@@ -157,90 +164,20 @@ for the HCMP project that is able to fully cooperate with conductor and schedule
 \end{figure}
  
 
-\section{Architecture}
-\subsection{HCMP Architecture}
-Figure 1.2 shows architecture of the whole HCMP project. it mainly contain 5 
-subsystems. A brief description of each subsystem and its function will be
-given in following paragraphs.
-\begin{figure}[H] % Example image
-\center{\includegraphics[width=1\linewidth]{1/2.png}}
-\caption{Whole Picture of the HCMP Project}
-\label{fig:speciation}
-\end{figure}
-
-\subsubsection{Real-Time System}
-Real-time components are needed to keep an HCMP system coordinated with
-the human musicians in an ensemble. Real-time synchronization aspects are
-handled by components such as beat and tempo tracking systems.
-
-\subsubsection{Abstract-Time System}
-Abstract time components are needed to manage and schedule score events in
-the context of the performance. The virtual scheduler and its associated systems are
-concerned with the abstract time aspects of the system. The virtual scheduler should
-reschedule events scheduled on a nominal time trajectory by warping the event times
-according to the incoming tempo data from the tempo prediction system. Events are
-then passed to an actual scheduler for real-time scheduling.
-
-\subsubsection{Score and Arrangement System}
-Score management is handled by the functional components in the center box of
-the diagram. These systems will allow a human musician to encode, manage, and
-arrange scores for performance.
-
-\subsubsection{Cueing System}
-Cueing systems are required to allow the computer system to react to high-level
-structural and synchronization changes during performance (e.g. additional
-repetitions of a chorus). There are mainly three types of cues:
-\begin{enumerate}
-  \item Static Score Position Cue. This cue is necessary when synchronization with the
-static score is lost. Issuing it will cause the dynamic score to be re-made
-accordingly.
-  \item Intention Cue. This cue is needed to inform the computer of the intended
-direction of the current performance (e.g. exiting a vamp section or adding an
-additional chorus). Issuing it (e.g. using a MIDI trigger, gesture recognition or
-other method) will cause the future dynamic score to be remade.
-  \item Voicing/Arrangement Cue. This cue is needed to allow control over the voicing
-of a section (e.g. it may be desirable to prevent a particular instrumental group
-from playing on the first time through a repeat but allow them to play on the
-second). Issuing this type of cue affects only the render system to which it is
-issued.
-\end{enumerate}
-
-\subsubsection{Render System}
-Render systems are responsible for providing different kindos multi-media output 
-at the appropriate time. Render system will be designed as some kind of ``add-on'' 
-for the HCMP, so that we could flexibly change, remove and update the render system.
-With unified programming interface, each reander system is provided similar raw 
-data and each system should also define its own way of parsing the raw data.
-Sometimes, metadata is required to link these data elements to their appropriate 
-static score position (and thus to
-their appropriate scheduling as the dynamic score is played). A standardized
-format will be required for this to relate static-score measure-numbers and the
-dynamic score position and context to the properties of the format concerned. This
-provide render systems more flexibility to determine how they need to deal with 
-beat-level information or simply use the measure-level data, for example, a score 
-display system might map a measure to image information or an audio render 
-system might represent audio at the beat level.
-
-%Abstract beat-time information can thus be linked to real-time source material
-%(to allow the correct scheduling of real-time data) while allowing the overall system
-%to remain oblivious to the specific source formats being used. Render systems
-%should use a callback interface whereby they schedule events with the scheduling
-%systems. These call the appropriate renderer at the scheduled time, causing
-%synchronized real-time output of media in accordance with the dynamic score and
-%beat tracking information.
-
-\subsection{HCMP Player Architecture}
-From system architectures' perspective, the interal HCMP Player is mainly made up of
-two threads, we name the thread that taking
-care of user input, maintaining graphic state GUI thread. And the thread worked as   
-player engine is called performer thread, each thread is a independent 
-module and executed in a separated thread space. Timer will be external source 
-which periodically invoke the user in do some task. A timer usually come with a 
-language library, so its implementation is within the category of this paper.
-
-During the performance, the HCMP Player will act as 
-the server for the conductor component, which is constantly 
-receiving control messages and responding accordingly. 
+\section{HCMP Player Architecture}
+The HCMP Player is mainly made up of two threads, that we call the GUI thread 
+and the performer thread. The GUI thread takes care of user input, maintaining 
+graphic state. The performer thread plays MIDI file synchronously with other 
+players, each thread is an independent 
+module. The two threads communicate with each other through a pair of shared 
+message queues. We assume the message 
+queue is large enough to avoid blocking by thread. The performer thread
+handles time-critical operations, and there will be a timer setup 
+before this thread is created. The goal of the timer is to 
+wake up the performer thread periodically. Everytime the performer 
+thread's timer callback function is invoked, 
+it will check the message queue and process any command from the control thread.
+Figure 2 illustrates the overall structure of the Player.
 
 \begin{figure}[H]
 \center{\includegraphics[width=0.65\linewidth]{2/2.png}}
@@ -248,19 +185,11 @@ receiving control messages and responding accordingly.
 \label{fig:speciation}
 \end{figure}
 
-Internally, the Player will have two threads, with one thread for
-GUI interactive control (GUI thread) and the other thread for 
-performing music data (performer thread). 
-The two threads will communicate with each other through a shared 
-message queue, we can assume the message 
-queue is large enough to avoid blocks for both caller and callee threads. 
-The performaner thread
-will handle time critical operations, and there will be a timer setup 
-before this thread is created. The goal of the timer is to 
-wake up the performer thread periodically. Everytime the performer 
-thread's timer callback function is invoked, 
-it will check the message queue and process any command from the control thread.
-Figure 2 illustrates the overall structure of the Player.
+During the performance, the HCMP Player will act as 
+the server for the conductor component, which is constantly 
+receiving control messages and responding accordingly. The
+conductor receives and forwards message to start and stop playing,
+set the position, and change the tempo.
 
 %Most organisms use polymers of glucose units for energy storage and differ only slightly in the way they link together monomers to sometimes gigantic macromolecules. Dextran of bacteria is made from long chains of $\alpha$-1,6-linked glucose units. 
 
