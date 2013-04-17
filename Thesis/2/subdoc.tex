@@ -5,7 +5,7 @@
 
 \section{Overview}
 In chapter 2, I will describe the GUI design of the HCMP Player, focusing 
-be on how the GUI design meets the requirement of the HCMP Player. I will describe
+on how the GUI design meets the requirement of the HCMP Player. I will describe
 each GUI components' 
 usage and function. The GUI of the HCMP Player contains 5 components, 
 a detailed explaination of each component will be given in following sections. 
@@ -22,9 +22,9 @@ Figure 3 is a layout of the GUI of HCMP Player. The whole area
 covers 800 * 600 pixels. The top part is the menu panel 800 * 200 pixels in size. 
 The track panel and 
 library panel share the middle-left part, each is 200 * 200 pixles in size. 
-The middle-right part is 400 * 600 pixels in size, and covering the most of the GUI, 
-it will hold a midi keyboard and data display component. To bottom part is the channel   
-panel. The bound every component to its own area, I put a container panel at the outmost 
+The middle-right part is 400 * 600 pixels in size, and covering most part of the GUI, 
+it will hold a midi keyboard and data display component. The bottom part is the channel   
+panel. To bound every component to its own area, I put a container panel at the outmost 
 layer. The container panel defines the boundary of the GUI of the HCMP Player. Any 
 component out of this boundary is invible to users. 
 
@@ -46,11 +46,11 @@ The function of each button is just like its name suggest. The network button
 is for the HCMP Player  
 network function, after clicking the button, the player will automatically 
 initiate a connection to a remote server, the IP address and port number pair is 
-predefined in the configuration file and can be easily changed. Once the connection is 
+predefined in the configuration file and can be easily modified. Once the connection is 
 successfully built, all controls will be transferred to the remote server. 
-This function will be explained in more detail in following
+The network function will be explained in more detail in following
 chapters.The menu panel also contains a slider to change 
-tempo. The slider inidicate the scale coefficient of tempo value. For example, 
+tempo. The slider indicates the scale coefficient of tempo value. For example, 
 if the original tempo is 90 BMP, and the slider is set to scale coefficient 1.5, 
 the tempo will be 1.5 * 90 
 BMP when playing the file. The import button is used to import a midi file 
@@ -80,7 +80,7 @@ loaded into the HCMP Player.
 
 \subsection{Midi Keyboard and Data Display}
 Figure 2.5 is a screenshot of the data display component. It is made up of a virtual  
-keyboard and a midi note canvas. After successfuly loading a midi file, the midi 
+keyboard and a midi note canvas. After successfully loading a midi file, the midi 
 note canvas will 
 draw each midi note in this area. When playing a midi file, the midi canvas will 
 automatically update the position of each midi note. 
@@ -89,7 +89,7 @@ The virtual keyboard has 9 octaves and 108 keys. Both the white and black keys
 are drawn by the canvas. Every midi note will be highlighted in the 
 virtual midi keyboard, based on its pitch, while playing. This avoids asynchronized speed 
 of canvas update and playing midi note problems. The canvas update speed is 
-coordinited with the player engine. Player engine is responsible for beat update and it 
+coordinited with the player engine. Player engine is responsible for updatting beat and it 
 periodically sends synchronization information to the GUI. After receiving updated 
 information from the player engine, the GUI will update all midi notes in canvas.
 
@@ -117,16 +117,15 @@ using redraw method is acceptable.
 
 \subsection{HCMP Player Library}
 
-Figure 2.6 is the screenshot of midi library panel. This simple midi library is 
-used to remember all the midi file that has ever been successfully loaded . 
-A configration file of HCMP Player store all the file name as well as its path, 
-so that next time when user launch HCMP Player again, it is able to load these 
-recently openned midi files immediately. Everytime a user click any file in the libary, 
-The GUI looks up a hash-like data structure and fetch its file path (if exist),
-it then is automatically
-loaded into the HCMP Player. If the midi file failed to load, the library and its
-configuration file will remove the obsolete entry and then update the library panel
-agian.
+Figure 2.6 is a screenshot of the midi library panel. This simple midi library is 
+used to retain all the midi files that has ever been successfully loaded into the HCMP Player. 
+The configration file of the HCMP Player stores all the file names and its paths, 
+when the user next launches the HCMP Player, it can load
+recently openned midi files immediately. When a user clicks any file in the libary, 
+the GUI looks up a hash-like data structure and fetches its file path (if it exists),
+it then automatically
+loads this information into the HCMP Player. If the midi file failed to load, the library and its
+configuration file will remove the obsolete entry an before updating the library panel.
 
 \begin{figure}[H]
 \center{\includegraphics[width=0.3\linewidth]{2/8.png}}
@@ -136,38 +135,38 @@ agian.
 
 \section{Player Mode}
 
-The HCMP Player has two mode, stand-alone mode and network mode. 
-In stand-alone mode, HCMP Player can be used as normal midi player 
-, user could load and play midi file. In network mode, 
+The HCMP Player has two modes, stand-alone mode and network mode. 
+In stand-alone mode, the HCMP Player can be used as a normal midi player 
+, the user can load and play any midi file. In network mode, 
 the HCMP Player will connect to a remote 
-server, in HCMP project, the server usually contains a conductor, and this
-conductor is responsible for communication and coordination with all the 
-instance of HCMP Players. For example, 
-a typical workflow of conductor is to read cue from external resource, 
-then issue command all the connected instances of the HCMP Players.
+server, in HCMP project, the server contains a conductor, that 
+is responsible for communication and coordination with all the 
+instances of HCMP Player. For example, 
+a typical workflow for the conductor includes reading cues from external resources, 
+then issuing command to all the connected instances of the HCMP Player.
 
 \subsection{Stand-alone Mode}
 
-When lauching the program, the HCMP player is default in stand-alone mode, 
-all the GUI component's function is described like above. 
-User could use HCMP Player to play midi file, change tempo, change volume, etc.
+When lauching the program, the HCMP player is by default in stand-alone mode, 
+with the GUI component's function as described above. 
+The user can use the HCMP Player to play midi file, change tempo, change volume, etc.
 
 
 \subsection{Network Mode}
 
-After launching the HCMP Player, if user click the network button, 
-the HCMP player will try to enter into    
-the network mode. At the beginning, it initiate a connection request 
-to remote server, the address and port number will stored in the
-HCMP Player configuration file. If receving no reply within certain 
-timeout period, the HCMP player ``rollback'' to its stand-alone mode.
-If receving confirm signal from
+When the user clicks the network button, 
+the HCMP player will enter
+network mode. It first initiates a connection request 
+to the remote server. The address and port number of the remote servers 
+stored in the HCMP Player configuration file. If no reply is received within
+timeout period, the HCMP player will ``rollback'' to the default stand-alone mode.
+If confirmation signal is received from the
 remote server, the 2-way connection between the HCMP Player and 
-remote server is successfully built up. Then, the HCMP Player and 
-remote server is able to communicate with each other. The control of HCMP 
-Player will partially be ``transfered'' to remote server. 
-In this mode, player control buttons like play, pause   
-, stop still work as normal, to avoid conflict problems, other buttons will 
-be temporarily disabled, which means binding method for these buttons is replaced by
+remote server is successfully created allowing the HCMP Player and 
+remote server to communicate. Control of the HCMP 
+Player will partially be ``transfered'' to the remote server. 
+In this mode, the player control buttons play, pause   
+and stop continue to work as normal. To avoid conflict problems, other buttons will 
+be temporarily disabled, and the binding method for these buttons is replaced by
 another set of functions. The detailed network API information will be explained  
 in the chapter 5.
