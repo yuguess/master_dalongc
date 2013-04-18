@@ -5,7 +5,6 @@
 % Default font size is 12pt, it can be changed here
 \documentclass[12pt]{Latex/Classes/PhDthesisPSnPDF} 
 
-
 \include{Latex/Macros/MacroFile1}
 
 \usepackage{geometry} % Required to change the page size to A4
@@ -17,6 +16,7 @@
 \usepackage{caption}
 \usepackage{amsmath}
 \usepackage{slashbox}
+\usepackage{caption}
 
 
 \usepackage{lipsum} % Used for inserting dummy 'Lorem ipsum' text into the template
@@ -125,7 +125,7 @@ Richard \textsc{Randall}
 \mainmatter
 \renewcommand{\chaptername}{} % uncomment to print only "1" not "Chapter 1"
 
-%Example citation \cite{Figueredo:2009dg}
+%Example citation 
 \include{1/subdoc}
 \include{2/subdoc}
 \include{3/subdoc}			
@@ -135,10 +135,12 @@ Richard \textsc{Randall}
 \include{7/subdoc}
 \include{8/subdoc}
 
-\begin{thebibliography}{99}
+
+\begin{thebibliography}{pubext}
+%\bibliography{sample}
+
 \bibitem{Dawen:2011}
-Framework for Coordination and Synchronization of Media, D.Liang, G.Xia and 
-R.Dannenberg, NIME 2011.
+Framework for Coordination and Synchronization of Media, D.Liang, G.Xia and R.Dannenberg, NIME 2011.
 
 \bibitem{ZMQ}
 http://www.zeromq.org
