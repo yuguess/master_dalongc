@@ -15,17 +15,17 @@
 \fi
 
 \section{Overview}
-Chapter mainly describe the player engine HCMP Player and its design, usage,
-and programming interface. Focus will be on how player engine communicate 
-with GUI component, what kind  
-``service'' player engine provides. In real implementation, player engine is 
-executed in a independent thread, namely perfermer thread. The message queue 
-is like unix-style ``pipe'' between 
-two programs. The player engine is periodically invoked up by a external timer, 
-execute some predefined task. For example, check and message queue and handle 
-pending request. The timer period is about 10ms, so any user 
-input will immediatelly passed to player engine through message queue and 
-be handled, the latency is trivial and can be ignored.
+This chapter describes the design, usage and programming interface. My focus 
+will be on communication between the GUI component and the player engine, and 
+the ``service'' player engine provides. In the implementation, the player 
+engine is executed in an independent thread, the perfermer thread. The 
+message queue is similar to unix-style ``pipe'' between two programs. The 
+player engine is periodically invoked up by an external timer to 
+execute a predefined task including checking the message queue and handling 
+pending requests. The external timer is set to 10ms, enabling user 
+input to be immediatelly passed to the player engine through message queue and 
+processed. Since messages are buffered slightly ahead and accurately timed 
+using timestamps, the latency is small and can be ignored.
 
 \begin{figure}[H]
 \center{\includegraphics[width=0.55\linewidth]{3/3.png}}
@@ -33,35 +33,35 @@ be handled, the latency is trivial and can be ignored.
 \label{fig:speciation}
 \end{figure}
 
-The player engine server two major purposes, the first purpose is to receive 
-message from GUI component and process it, the second purpose is to schedule 
-and play midi event at desire time, sometimes, player engine also need to 
-reschedule those scheduled events. In concolusion, we can basically divide 
-design of player engine  
-into two parts, communication and synchronization. Communication refer to the 
-way player engine and GUI work together. Synchronization refer to
-media synchroization, which involv how schedule midi note, how to resposne to
-the change of tempo. 
+The player engine serves two major purposes. First it receives
+messages from the GUI component and processes them. The second purpose is to 
+schedule and play MIDI events at the desire time, and if needed, to
+reschedule those scheduled events. In concolusion, the design of the player 
+engine is divided into two parts: communication and synchronization. 
+Communication refers to the way the player engine and GUI work together. 
+Synchronization refers to media synchroization, which involves scheduling 
+MIDI notes and the response to changes in tempo. 
 
 \section{Communication}
 
-Figure 3.2 illustrate commuication between GUI component and player engine, 
-in this figure,  
-the GUI component receive request and worked as ``front-end'' part of HCMP Player,
-and player engine handle the requeset and worked as the ``back-end'' part. 
-In stand-alone mode, the GUI component receive request from  
-user-generate events like clicking button or adjustting slider bar. These events are
-all captured by GUI component, processed and evnentualy passed to player engine. 
-In network mode, the request is captured through network interface, the GUI
-is responsible for handle it when request first arrived by network.
-Form player engine's perspective, it has no 
-idea whether the request is from a user motion or a remote server. 
-Based on this scenaio, a unified API between GUI component and player engine is 
-defined to
+Figure 3.2 illustrates communication between the GUI component and the player 
+engine. In this figure, the GUI component receives a request and works as the 
+``front-end'' part of the HCMP Player, and the player engine works as the 
+``back-end'' acting on the request. 
+
+In stand-alone mode, the GUI component 
+receives requests from user-generated events of clicking a button or adjusting 
+the slider bar. These events are captured by the GUI component, processed and 
+then passed to player engine. In network mode, the request is captured through 
+the network interface. The GUI receives the request when it first arrives 
+from the network. The player engine does not differentiate between requests 
+originating from user input and processed through the GUI and requests 
+originating from a remote server and processed through the GUI component. 
+A unified API between the GUI component and the player engine is defined to
 clearly illustrate the responsiblity boundary of each module. Note that the 
-API between GUI component and player engine is different from those of network API, 
-the former is an internal API between two module, the latter is defined to coordiate
-between remote server and multiple instance of HCMP players.
+API between GUI component and the player engine is different from the network API. 
+The former is an internal API between two modules, the latter is defined to 
+coordinate between a remote server and multiple instances of HCMP players.
 
 \begin{figure}[H]
 \center{\includegraphics[width=0.7\linewidth]{3/4.png}}
@@ -71,8 +71,8 @@ between remote server and multiple instance of HCMP players.
 
 \subsection{Graphic User Interface Thread}
 
-Table 3.2 list the GUI component and its request, in stand-alone 
-when user click those  buttons, it will send request to player engine.
+Table 3.2 lists the buttons shown on the GUI component. Each button will send
+the request listed when clicked by a user and in stand-alone mode.
 
 \begin{table}[htdp]
 \centering
@@ -93,20 +93,22 @@ volume slider & change\_volume \\\hline
 
 \subsection{State Transition Diagram}
 
-Table 3.2 and 3.3 are state transition diagrams for player engine. Column is state, 
-Row is method,  each (column, row) pair in table means that, given current state
-if we invoke certain method, what player engine state will transit to.
+Table 3.2 and 3.3 are state transition diagrams for player engine. The leftmost 
+column lists state and the top row list methods. Each (column, row) pair in the 
+table indicates what the player engine state will change to given the initial 
+state (left column) and method invoked (top row). 
 
-The player engine only receive and accept control messages from GUI component. 
-It immediately process the message upon receiving. In real implementation, 
-the player engine has a hash like data structure to store all the invoking
-methods, the key is a pair of current state and request, the value is method which 
-transit the current state to new state, it is quite similar to previous 
-state transition diagram. When the player engine thread firstly 
-created, it also initialize a timer to periodically invoke itself after
-initialization. Note that to avoid dropping request problem from happening, 
-we need make sure that all the routinues can be executed and completed within 
-bounded time.
+The player engine only receives and accepts control messages from the GUI 
+component. It immediately processes the message upon receiving it. The 
+implementation uses a hash-like data structure to store the invoking
+methods. The key is a pair of current state and request, the value is the method
+which changes the current state to a new state. It is similar to the previous 
+state transition diagram. When the player engine thread is 
+created, it also initializes a timer to periodically invoke itself. 
+
+%Note that to avoid dropping request problem from happening, 
+%we need make sure that all the routinues can be executed and completed within 
+%bounded time.
 
 \begin{table}[htdp]
 \centering
@@ -140,25 +142,22 @@ network & undefine & undefine \\\hline
 \end{table}
 \section{Media Synchronization}
 
-To accurately schedule the midi note and apply to any tempo chage.  The player 
-engine requires two scheduler, real-time scheduler and virtual-time scheduler. 
-Usually, a computation will perform some action needed at the present time,
-followed by the scheduling of the next action. The real-time scheduler’s role 
-is to keep track of all pending actions and to invoke them at the proper 
-time, thus eliminating the need
-for Players to busy wait, poll, or otherwise waste computer cycles to 
-ensure that their next computation is performed on time. Virtual-time
-scheduler is built upon the
-real-time player, in most of popular music, we can treat 
-synchronization happened at beat level. The purpose of virtual-time
-scheduler is to schedule everything at beat level, and the huge 
-advantage is that once tempo changed, either due to internal parameter 
-of midi file or external signal, there is no need to reschedule 
-everything. With virtual-time scheduler, we only need to rearrage
-limited number of midi notes.
+To accurately schedule the MIDI note and apply tempo changes, the player 
+engine requires two schedulers, a real-time scheduler and a virtual-time 
+scheduler. 
+
+A computation will perform an action needed at the present time,
+then schedule the next action. The role of real-time scheduler is to keep track 
+of all pending actions and to invoke them at the proper time. This eliminates 
+the need for Players to wait, poll or otherwise waste computer cycles to
+ensure that their next computation is performed on time. The virtual-time
+scheduler works at the beat level. Once tempo is changed, either due to an 
+internal parameter of a MIDI file or an external signal, there is no need
+to reschedule everything. This is a huge advantage. By using the virtual-time 
+scheduler, we only need to rearrage a limited number of MIDI notes.
 
 \subsection{Tempo Prediction}
-Assumming most popular music forms has common structure of
+Our system deals with popular music forms that have common structure of
 beats and measures across all instruments. Thus time is measured in beats. 
 The basis for synchronization is a shared notion of the current beat 
 and the current tempo. Beats are represented by a floating point number, 
@@ -175,7 +174,7 @@ occurred at time $t_0$, the current time is $t$, and the current beat is $b$.
 
 \begin{figure}[H]
 \center{\includegraphics[width=0.5\linewidth]{3/2.png}}
-\caption{Midi data display integrated with vitural keyboard}
+\caption{MIDI data display integrated with vitural keyboard}
 \label{fig:speciation}
 \end{figure}
 
@@ -234,10 +233,10 @@ like, \texttt{"method\_name;argument1;argument2;argument3"}, each argument is
 separated by a \texttt{";"}
 character,. When passing in the parameter string, the player engine
 use a \texttt{split}-like function to parse the string and store all elments 
-into an array. After parsing the request string, the first element (the request name) 
-together with player engine current state form a pair argument. This pair 
-will be used as a argument to state transition matrix, then fetch the method, which
-transit the current state to a new state.
+into an array. After parsing the request string, the first element 
+(the request name) together with player engine current state form a pair 
+argument. This pair will be used as a argument to state transition matrix, 
+then fetch the method, which transit the current state to a new state.
 These API maybe different
 from the those APIs defined in next chapter, while most of them has quite similar 
 function, the only different lies in that these APIs are defined only for the 
