@@ -1,18 +1,7 @@
 % this file is called up by thesis.tex
 % content in this file will be fed into the main document
 
-%: ----------------------- name of chapter  -------------------------
 \chapter{Player Engine Design} % top level followed by section, subsection
-
-
-%: ----------------------- paths to graphics ------------------------
-
-% change according to folder and file names
-\ifpdf
-    \graphicspath{{X/figures/PNG/}{X/figures/PDF/}{X/figures/}}
-\else
-    \graphicspath{{X/figures/EPS/}{X/figures/}}
-\fi
 
 \section{Overview}
 This chapter describes the design, usage and programming interface. My focus 
@@ -69,7 +58,7 @@ coordinate between a remote server and multiple instances of HCMP players.
 \label{fig:speciation}
 \end{figure}
 
-\subsection{Graphic User Interface Thread}
+\subsection{Graphical User Interface Thread}
 
 Table 3.2 lists the buttons shown on the GUI component. Each button will send
 the request listed when clicked by a user and in stand-alone mode.
@@ -147,24 +136,25 @@ engine requires two schedulers, a real-time scheduler and a virtual-time
 scheduler. 
 
 A computation will perform an action needed at the present time,
-then schedule the next action. The role of real-time scheduler is to keep track 
-of all pending actions and to invoke them at the proper time. This eliminates 
-the need for Players to wait, poll or otherwise waste computer cycles to
-ensure that their next computation is performed on time. The virtual-time
-scheduler works at the beat level. Once tempo is changed, either due to an 
-internal parameter of a MIDI file or an external signal, there is no need
-to reschedule everything. This is a huge advantage. By using the virtual-time 
-scheduler, we only need to rearrage a limited number of MIDI notes.
+then schedule the next action. The role of the real-time scheduler is to keep 
+track of all pending actions and to invoke them at the proper time. This 
+eliminates the need for players to wait, poll or otherwise waste computer 
+cycles to ensure that their next computation is performed on time. The 
+virtual-time scheduler works at the beat level. Once tempo is changed, either 
+due to an internal parameter of a MIDI file or an external signal, there is 
+no need to reschedule everything. This is a huge advantage. By using the 
+virtual-time scheduler, we only need to rearrange a limited number of MIDI 
+notes.
 
 \subsection{Tempo Prediction}
-Our system deals with popular music forms that have common structure of
-beats and measures across all instruments. Thus time is measured in beats. 
-The basis for synchronization is a shared notion of the current beat 
-and the current tempo. Beats are represented by a floating point number, 
-hence they are continuous rather than
-integers or messages such as in MIDI clock messages. Also, rather than update the
-beat number at frequent intervals, we use a linear mapping from time to
-beat. This mapping is conveniently expressed using three parameters (b0, t0, s):
+Most popular music forms have a common structure of beats and measures across
+all instruments. Thus, time is measured in beats. The basis for synchronization 
+in the HCMP Project is a shared notion of the current beat and the current 
+tempo. Beats are represented by a floating point number, they are continuous 
+rather than integers or messages such as in MIDI clock messages. Rather than 
+update the beat number at frequent intervals, we use a linear mapping from time to
+beat. This mapping is conveniently expressed using three parameters 
+($b_0$, $t_0$, $s$):
 \begin{equation}
 b = b_0 + (t - t_0) * s 
 \end{equation}
@@ -174,24 +164,25 @@ occurred at time $t_0$, the current time is $t$, and the current beat is $b$.
 
 \begin{figure}[H]
 \center{\includegraphics[width=0.5\linewidth]{3/2.png}}
-\caption{MIDI data display integrated with vitural keyboard}
+\caption{Linear Mapping Tempo Prediction \cite{Dawen:ISMIR2011}}
 \label{fig:speciation}
 \end{figure}
 
-One advantage of this approach is that it is almost independent of latency.
-One can send ($t_0$, $b_0$, $s$) to another computer or process and the mapping will remain
-valid regardless of the transmission latency. When parameters change,
-there can be a momentary disagreement in the current time among various
-processes, but this should be small given that tempo is normally steady.
+One advantage of this approach is that there is almost no latency.
+One can send ($t_0$, $b_0$, $s$) to another computer or process and the 
+mapping will remain valid regardless of the transmission latency. 
+When parameters change, there can be a small different in the current 
+time among various processes, but this should be small given that tempo 
+is normally steady.
 
 Media players schedule computation to affect the output at specific beat
 times. For example, an audio player may begin a sample playback at beat 3, or a
 MIDI player may send a note-on message at beat 5. The current beat time $b$ in 
-equation 3.1
-refers to the beat position of media which are being output currently.
-Since audio output buffer contains 0.01s of audio, then computation associated with
-beat b should be performed 0.01s earlier than b. Thus, given a player-specific latency
-$l$, we need to compute the real time $t$ at which to schedule a computation associated
+equation 3.1 refers to the beat position of media which is being played.
+The audio output buffer contains 0.01s of audio, so then computation associated 
+with beat $b$ should be performed 0.01s earlier than $b$. Thus, given a 
+player-specific latency $l$, we need to compute the real time $t$ at which to 
+schedule a computation associated
 with beat $b$. The following formula is easily derived:
 
 \begin{equation}
@@ -202,58 +193,53 @@ We simply map the beat position $b$ according to ($b_0$, $t_0$, $s$), and then s
 latency $l$ to get the computation time $t$.
 
 Our current scheduelr use a simple method to predict the beat . 
-Basically, a linear regression over recent taps is used to estimate the
+A linear regression over recent taps is used to estimate the
 mapping from beat to time. 
 
-Once the tempo and beat phase is established, there is a way to determine
-an offset from the arbitrary beat number to the beat number in the score. This might
-be determined by a external signal that tells when the system should begin 
-to play. The
-important point here is that some mechanism estimates a local mapping between
-time and beat position, and this mapping is updated as the performance progresses.
+Once the tempo and beat phase is established, we can determine an
+offset from the arbitrary beat number to the beat number in the score. This might
+be determined by a external signal that instructs the system when to begin 
+playing. The important point here is that some mechanism estimates a local 
+mapping between time and beat position, and this mapping is updated as 
+the performance progresses.
 
 \subsection{Scheduling}
 
 Schedulers in the HCMP Player accept requests to perform specific
-computations at specific times in the future. Sometimes, the specified time 
+computations at specific times in the future. The specified time 
 can be a ``virtual'' time in units such as beats that are translated to real 
-time according to a tempo, as in equation 3.2. An important idea is
-that all pending events can be sorted according to beat time 
-and everytime the player engine just pick up the earliest event and check its 
-time-stamp. If the tempo changes, only the time of this
-earliest event needs to be recomputed. When event times are
-computed according to equation 3.2, the earliest pending event can change when tempo
-changes. 
+time according to a tempo, as in equation 3.1. All pending events can be 
+sorted according to beat time. The player engine accepts the event and 
+reads its time-stamp. Only the time of this earliest event needs to be 
+recomputed if the tempo changes. With event times computed according to 
+equation 3.1, only the earliest pending event needs to change when tempo
+changes. This is an important feature of the HCMP Player.
 
 \section{Player Engine Programming Interface}
-In this section, I list all the API that GUI used to communicate with player 
-engine. The GUI and player communicate with each other using strings and 
-all the parameters are also of type string. A typical string message will be 
-like, \texttt{"method\_name;argument1;argument2;argument3"}, each argument is 
+In this section, I describe the API that GUI uses to communicate with player 
+engine. The GUI and player engine communicate with each other using strings.
+A typical string message will be 
+\texttt{"method\_name;argument1;argument2;argument3"}, each argument is 
 separated by a \texttt{";"}
-character,. When passing in the parameter string, the player engine
-use a \texttt{split}-like function to parse the string and store all elments 
+character. When passing in the parameter string, the player engine
+uses a split-like function to parse the string and store all elements 
 into an array. After parsing the request string, the first element 
-(the request name) together with player engine current state form a pair 
-argument. This pair will be used as a argument to state transition matrix, 
-then fetch the method, which transit the current state to a new state.
-These API maybe different
-from the those APIs defined in next chapter, while most of them has quite similar 
-function, the only different lies in that these APIs are defined only for the 
-communication purpose of GUI and palyer engine \\
-Player control related APIs 
+(the request name) and the player engine's current state form a pair. 
+This pair will be used as an argument for the state transition matrix
+to fetch the method to change the current state to a new state.\\
+Player control related commands 
 \begin{itemize}
   \item \texttt{load - "load;file\_path"}
   \item \texttt{play - "play;void"}  
   \item \texttt{pause - "pause;void"}
   \item \texttt{stop - "stop;void"}
 \end{itemize}
-Audio control related APIs
+Audio control related commands 
 \begin{itemize}
   \item \texttt{change\_volume - "change\_volume;track\_num;velocity"}  
   \item \texttt{change\_tempo - "change\_tempo;tempo\_scale\_coefficient"}  
 \end{itemize}
-Connection mode related APIs, detail define in following chapter.
+Connection mode command (detail define in the following chapter)
 \begin{itemize}
   \item \texttt{ini\_connection - "ini\_connection;void"}  
 \end{itemize}

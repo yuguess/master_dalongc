@@ -15,33 +15,34 @@
 \fi
 
 \section{Overview}
-Chapter 5 mainly describes the implemenation details of the HCMP Player. Some 
+Chapter 5 mainly describes the implemenation details of the HCMP Player. Some
 pseudocode snippets are given to illustrate the relationship between 
-different components. 
-Focus will be on discussing some implementation related issues. 
+different components. The focus will be on discussing some implementation 
+related issues. 
 
 \section{Development Environment}
 
-The HCMP Player is developed using the script language 
-Serpent\cite{Serpent}. Serpent is similar to Python, which has a simple, 
+The HCMP Player is developed using the scripting language Serpent\cite{Serpent}. 
+Serpent is similar to Python, which has a simple, 
 minimal syntax, dynamic typing and support for object-oriented programming. 
-The best part of serpent is 
+The best part of Serpent is 
 that it has many convenient built-in functions for MIDI message processing, 
 which greatly facilitates the development of music-related applications. 
-As for the GUI part, wxWidgets \cite{wxWidget} library provides one the of best 
-solutions, some core functions and objects have been integrated into the Serpent 
-library. The Zeromq library is used to develop network related functions, it 
-integrates with common network commmunication functions. The whole project 
-is developed in the Linux 32-bit environment, Serpent provide a cross-platform solution, 
-so the HCMP Player should also run on Windows or Mac platforms.
+As for the GUI development, the wxWidgets \cite{wxWidget} library provides one 
+the of best solutions, and some core functions and objects have been 
+integrated into the Serpent library. The Zeromq library is used to develop 
+network related functions, it integrates with common network commmunication 
+functions. The whole project is developed in the Linux 32-bit environment. 
+Serpent provide a cross-platform solution, so the HCMP Player should also 
+run on Windows or Mac platforms.
 
 \section{GUI Implementation}
-Table 5.1 illustrates the general code structure of the GUI component, 
-it first parses the configuration file. If there is no configuration file 
+Table 5.1 illustrates the general code structure of the GUI component. 
+It first parses the configuration file. If there is no configuration file 
 in the current working directory, then the HCMP Player will create a new one.
 The configuration file is stored in the current working directory with 
-the name ``\texttt{.player\_config}'', and contains all the HCMP Player  
-related settings. For example, the default remote server address and 
+the name , ``\texttt{.player\_config}'' and contains all the HCMP Player  
+related settings. For example, the default Conductor address and 
 port number, recently opened file path, etc. The configuration file is written 
 with plain ASCII text, user could easily modify the content. GUI 
 component has 2 operations, \texttt{new} and \texttt{save} to create a new 
@@ -49,7 +50,7 @@ configuration file and save current configurations to the file.
 
 After the configuration parsing and initialization job is complete, the 
 the GUI begins to create each subcomponent. Each subcomponent has defined its 
-own ``constructor''function. Note that to make data accessing easier 
+own ``constructor'' function. Note that to make data accessing easier 
 between different components, we pass in ``this'' (object itself) to each  
 subcomponent.
 \begin{table}[htdp]
@@ -70,12 +71,12 @@ def GUI {
 
 \subsection{Binding Method}
 Table 5.2 is a Serpent code snippet which shows a simple way for the GUI object 
-to bind with a method. We bind play button to a method, which sends a play 
+to bind with a method. We bind the Play button to a method, which sends a play 
 request to the player engine. Note that the argument of the binding method is 
-a string with method name and parameters
+a string with the method name and parameters
 separated by character \texttt{`;'}. The binding function's type is predefined 
 inside Serpent, which has 4 predefined arguments. The first argument is the object 
-itself. The second arugment is the event type. The thrid and fourth arguments are 
+itself. The second arugment is the event type. The third and fourth arguments are 
 event position.
 Not all of the event arguments are valid, since some other events provide 4 arguments, 
 while some events may only need 2 arguments. In Serpent, all of the object events 
@@ -92,7 +93,7 @@ Class PlayBtn(button)
     this.method = 'send_play'
 
   def send_play(obj, event, x, y)
-    send_player_engine('play;void')
+    send_player_engine("play;void")
 
 \end{lstlisting}
 \caption[Binding Method]{Binding Method}
@@ -100,22 +101,21 @@ Class PlayBtn(button)
 
 \subsection{Drawing Canvas}
  
-Canvas objects define specified area to draw image. In Serpent, the canvas 
+Canvas objects define an area to draw images. In Serpent, the canvas 
 object use the wxWidget canvas object. The canvas object has a full-size bitmap.
-The drawing method
-first draws on the bitmap, then the whole bitmap is copied to the canvas object. 
-The code has been specially optimized to deal with bitmap-copy, so the efficiency 
-is not a big issue. In Serpent, a class needs to fulfill two conditions in order 
-to be drawable. The First condition is
-the class needs to be a subclass of canvas class. The second condition is that 
+The drawing method first draws on the bitmap, then the whole bitmap is copied 
+to the canvas object. This is a common technique to avoid flicker when a canvas is 
+redraw In Serpent, a class needs to fulfill two conditions in order 
+to be drawable. The first condition is
+the class needs to be a subclass of the Canvas class. The second condition is that 
 the class need to define its own paint method. Table 5.3 illustrate the user 
-defined \texttt{Keyboard} class, which is to draw a keyboard on the canvas.
+defined \texttt{Keyboard} class, which draws a keyboard on the canvas.
 
-In the HCMP Player, there are two classes which adapt the canvas class, 
-\texttt{Keyboard} and \texttt{MidiNotes} class, the former draws a 108-key 
-keyboard, the latter draws all MIDI notes on the canvas. Each class has a buffer 
+In the HCMP Player, there are two subclasses of the Canvas class, 
+\texttt{Keyboard} and \texttt{MidiNotes}. The former draws a 108-key 
+keyboard; the latter draws all MIDI notes on the canvas. Each class has a buffer 
 to store all of the objects needed to be drawn. The play engine periodically 
-sends ``synchronization'' signals. Everytime, the GUI receives the synchronization 
+sends ``synchronization'' signals. Everytime the GUI receives the synchronization 
 signal, it will redraw the whole area.
 
 \begin{table}[htdp]
@@ -135,15 +135,15 @@ class Keyboard(Canvas)
 \section{Player Engine Implementation}
 
 \subsection{Create a New Thread}
-The Player engine runs inside a separate thread space. When GUI thread completes 
+The Player engine runs inside a separate thread space. When the GUI thread completes 
 all of the subcomponets' initialization work, it will create a new thread. The newly
-spawned thread will execute the player engine code. In table 5.4, we use the   
+spawned thread will execute the player engine code. In Table 5.4, we use the   
 \texttt{thread\_create} built-in function of the Serpent standard library to create 
 a new thread. It has 3 arguments. 
-The first argument is to set a period by which newly spawned will wake up and call 
+The first argument sets a period by which newly spawned thread will wake up and call 
 a callback-style function. The mechanism can be used to set a message channel between 
 two threads for communication purposes. The second argument specifies 
-which script file to execute for the new thread. The third argument specify the 
+which script file to execute for the new thread. The third argument specifies the 
 memory size for the new thread.
 
 \begin{table}[htdp]
@@ -162,8 +162,8 @@ thread_create(2, "player_engine.srp", 0) // create new thread
 \subsection{Thread Communication}
 
 Serpent has a very primitive multi-thread interface. The thread concept is 
-different from how threads work in C programming language. Though all Serpent 
-threads exist in one process, thread does not share any variables and the only 
+different from how threads work in the C programming language. Though all Serpent 
+threads exist in one process, threads do not share any variables and the only 
 communication channel is a message queue. The Serpent library provides two
 built-in functions: \texttt{thread\_send} and \texttt{thread\_receive} 
 for message passing. Both \texttt{thread\_send} and \texttt{thread\_receive}
@@ -196,9 +196,9 @@ def porttime_callback(ms)
 
 \subsection{Player Engine}
 Table 5.6 is a pseudocode snippet of the player engine. Its main job is to read 
-from GUI component through a message queue, parse the command string(the  
-command string structure is defined chapter 3), and then look up a state-method 
-matrix (refer to table 3.2 and 3.3) to fetch the method to transit from the 
+from GUI component through a message queue, parse the command string (the  
+command string structure is defined in the Chapter 3), and then look up a state-method 
+matrix (refer to Table 3.2 and 3.3) to fetch the method to transit from the 
 current state to the new state. Note that this segment of code snippet is also 
 embeded within the \texttt{portime\_callback} function.
 
@@ -225,7 +225,7 @@ def player_engine {
 \subsection{Initiate Connection}
 Table 5.7 is a pseudocode snippet that illustrates how the HCMP Player and   
 Conductor build a connection. It is a remote procedure model.
-With Conductor on the client side and the HCMP Player on the server side, HCMP 
+With Conductor on the server side and the HCMP Player on the client side, HCMP 
 Player initiates the connection and waits for a reply from Conductor. The 
 underlying connection related function is provided inside the Zeromq library.
 
@@ -234,21 +234,21 @@ underlying connection related function is provided inside the Zeromq library.
 \begin{lstlisting}
 
 // client side
-def server {
-  srv = socket (context, ZMQ_REP);
-  srv.bind ("tcp://*:5555");
-  srv.send(con_request);
+def client {
+  cli = socket (context, ZMQ_REP);
+  cli.bind ("tcp://*:5555");
+  cli.send(con_request);
 }
 
 ------- separate line -------
 
-// client side
-def client {
-  cli = socket (context, ZMQ_REP);
-  cli.bind ("tcp://*:5555");
-  con_req_str = cli.recv();
+// server side
+def server {
+  srv= socket (context, ZMQ_REP);
+  srv.bind ("tcp://*:5555");
+  con_req_str = srv.recv();
   reply = engine.process_req(con_req_str);
-  cli.send(reply);
+  srv.send(reply);
 }
 
 \end{lstlisting}
@@ -257,14 +257,14 @@ def client {
 
 \subsection{Maintain Connection}  
 Table 5.8 is the pseudocode snippet of the observer pattern, 
-which is used by the HCMP Player and the remote server for network
+which is used by the HCMP Player and the Conductor for network
 communication. The code has two parts, {\bf Subject} and {\bf Dependent}. In 
-the real implementation, Conductor is the {\bf Subject} and the HCMP Player 
-is the {\bf Dependent}. To begin communication 
-, the {\bf Subject} needs to bind to a certain port of the local machine first. 
+the real implementation, the Conductor is the {\bf Subject} and the HCMP Player 
+is the {\bf Dependent}. To begin communication, the {\bf Subject} needs to 
+bind to a certain port of the local machine first. 
 Once the {\bf Dependent} registers into the list, the {\bf Subject} begins 
-to ``publish'' messages. In this situation, dependent just waits for coming 
-messages and handles them.
+to ``publish'' messages. In this situation, the {\bf Dependent} just waits 
+for coming messages and handles them.
 
 \begin{table}[htdp]
 \centering
@@ -290,7 +290,7 @@ def dependent {
 
   rc = zmq_setsockopt (dependent, ZMQ_SUBSCRIBE)
   cmd_string = s_recv (dependent);
-  send_player_engine('cmd_str')
+  send_player_engine("cmd_str")
 
   zmq_close ();
 }

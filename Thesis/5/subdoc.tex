@@ -23,36 +23,41 @@ successful criteria, the project must satisfy both functional and performance re
 \section{Functional Evaluation}
 \subsection{stand-alone mode}
 \begin{enumerate}
-  \item User should be able to load and play normal midi files.
-  \item User should be able to play, pause, stop while playing midi file.  
+  \item User should be able to load and play normal MIDI files.
+  \item User should be able to play, pause, stop while playing MIDI file.  
   \item User should be able to freely adjust tempo.  
-  \item Data visualization component should correctly show the midi note 
-        and synchronize with audio stream while playing the midi file.
+  \item Data visualization component should correctly show the MIDI note 
+        and synchronize with audio stream while playing the MIDI file.
   \item Each track component should match according color on data visualization component.
   \item Each track component should be able to mute, solo and adjust 
         volume for according track.  
-  \item The player should contain a simple midi library to manage midi files. 
-        The library should automatically remember frequently used midi files.
+  \item The player should contain a simple MIDI library to manage MIDI files. 
+        The library should automatically remember frequently used MIDI files.
   \item The player should provide a complete configuraion interface for the 
         user, all user's setting should be saved automatically.
 \end{enumerate}
 
 \subsection{network mode}
 \begin{enumerate}
-  \item Each instance of midi player runs in its own process space, and should be launched separately by user.
-        After launching, the midi player should automatically connect to a conductor 
+  \item Each instance of the HCMP player runs in its own process space, and should 
+        be launched separately by user.
+        After launching, the HCMP player should automatically connect to a conductor 
         based on its configuration.
-  \item The conductor communicate with midi player through ZMQ protocol \cite{ZMQ}, adapting the publisher-subscriber 
-        design pattern. The conductor will be ``publisher'' and each midi player will be ``subscriber''. In this process, 
-        The midi player first connect to the conductor and registered as subscriber, conductor will inform all the 
+  \item The Conductor communicate with the HCMP player through ZMQ protocol 
+        \cite{ZMQ}, adapting the publisher-subscriber design pattern. The 
+        Conductor will be ``publisher'' and each MIDI player will be ``subscriber''. 
+        In this process, The MIDI player first connect to the Conductor and 
+        registered as subscriber, the Conductor will inform all the 
         subscribers and invoke according callback function once an event happens.
-  \item Multiple instances of midi player should be able to connect to one conductor. 
-  \item After establishing connection with conductor, the midi player should be able to receive tempo informaiton 
-        from conductor and synchronize with it.     
-  \item The conductor should be able to ask certain midi player to load specified configuration file or it could directly 
-        send configuration information through network to midi player.
+  \item Multiple instances of MIDI player should be able to connect to one conductor. 
+  \item After establishing connection with the Conductor, the MIDI player 
+        should be able to receive tempo informaiton from the Conductor and 
+        synchronize with it.     
+  \item The Conductor should be able to ask certain MIDI player to load specified configuration file or it could directly 
+        send configuration information through network to MIDI player.
   \item 
-    The midi player is compatible with ZeroMQ \cite{zeromq} api, and 4 core functions will be like
+    The HCMP player is compatible with ZeroMQ \cite{zeromq} api, and 4 core 
+    functions will be like
     \begin{itemize}
       \item play - ask a player to start playing 
       \item stop - stop a player from playing 
@@ -63,10 +68,10 @@ successful criteria, the project must satisfy both functional and performance re
 
 %\section{Performance Evaluation}
 \begin{enumerate}
-  \item The midi player GUI part should always response to user input without any delay, and the GUI thread 
-        should not hang there.
-  \item The midi player should response to conductor without significant delay.
-  \item The midi player should use no more than 100MB memory.
-  \item The midi player should use reasonable amount of CPU while playing midi file.
-  \item Hopefully, the midi player shoud not crash without any reason. 
+  \item The HCMP player GUI part should always response to user input without 
+        any delay, and the GUI thread should not hang there.
+  \item The HCMP player should response to the Conductor without significant delay.
+  \item The HCMP player should use no more than 100MB memory.
+  \item The HCMP player should use reasonable amount of CPU while playing MIDI file.
+  \item Hopefully, the HCMP player shoud not crash without any reason. 
 \end{enumerate}

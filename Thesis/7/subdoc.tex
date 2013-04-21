@@ -25,14 +25,12 @@ and discuss some potential performance issues.
 
 \section{Functional Evaluation}
 Based on the project design from previous chapters, the evaluation of the 
-project contains two parts. To reach the successful criteria, the project not 
-only need to satisfy the functional requirements but also all of the performance 
-requirements. The 
-functional requirement cover all the basic function of the HCMP Player.
-Each functional requirement will be 
-either manully tested or automatically tested by scripts. As for the
-performance test, some code segments will be added to the original program to
-test the general performance issues.
+project contains two parts. To be successful, the project needs to satisfy 
+the functional requirements as well as all of the performance 
+requirements. The functional requirement cover all the basic function of 
+the HCMP Player. Each functional requirement has been tested manually or 
+automatically by scripts. As for the performance test, some code segments 
+have been added to the original program to test the general performance issues.
 
 \subsection{Stand-alone Mode Requirement}
 \begin{enumerate}
@@ -40,7 +38,7 @@ test the general performance issues.
   \item The user should be able to play, pause, and stop while playing MIDI files.  
   \item The user should be able to freely adjust tempo, while playing the MIDI files.
   \item Data visualization components should correctly show the MIDI notes 
-        and synchronize with audio stream while playing the MIDI files.
+        and synchronize with the audio stream while playing the MIDI files.
   \item Each track component should match to colors on the data visualization 
         component.
   \item Each track component should be able to mute, solo and adjust volume.  
@@ -48,37 +46,37 @@ test the general performance issues.
         The library should automatically remember recently imported MIDI files.
   \item The player should provide a complete configuration interface for the 
         user. All of user's setting should be saved automatically.
-  \item The configuration of HCMP Player should be saved into a file.
+  \item The configuration of the HCMP Player should be saved into a file.
 \end{enumerate}
 
 \subsection{Network Mode Requirement}
 \begin{enumerate}
-  \item Each instance of HCMP Player runs in its own process space. One player 
-        should not effect other player's function or performance. 
+  \item Each instance of the HCMP Player runs in its own process space. One player 
+        should not affect another player's function or performance. 
         
   \item Each HCMP Plyaer should be launched separately by the user. After 
         launching, the MIDI player should automatically connect to a Conductor 
         based on its configuration.
 
-  \item If HCMP Player failed to establish a connection with the remote server, 
+  \item If the HCMP Player fails to establish a connection with the Conductor, 
         it should rollback to the stand-alone mode without crashing.
 
-  \item The Conductor communicates with MIDI player through a predefined API. 
+  \item The Conductor communicates with the MIDI player through a predefined API. 
         The API is defined in Chapter 5. After establishing a connection with 
-        the remote server, HCMP Player should register into Conductor's 
+        the Conductor, the HCMP Player should register with Conductor's 
         {\bf Dependent} list. Once a command is received, the Conductor sends 
         messages to all the HCMP Players that previously registered in the 
         {\bf Dependent} list. 
 
   \item Multiple instances of the HCMP Player should be able to connect to one Conductor. 
   \item After establishing a connection with Conductor, the MIDI player 
-        should be able to receive tempo information from Conductor and 
+        should be able to receive tempo information from the Conductor and 
         synchronize with it.     
   \item The Conductor should be able to explicitly command certain MIDI players to 
-        load a specified configuration file or it could directly 
+        load a specified configuration file or it can directly 
         send configuration information through the network to that MIDI player.
   \item 
-    The HCMP Player is compatible with Zeromq\cite{zeromq} API, 
+    The HCMP Player is compatible with Zeromq \cite{zeromq} API, 
     and the 4 core functions will be
     \begin{itemize}
       \item \texttt{play} - ask a player to start playing 
@@ -92,11 +90,11 @@ test the general performance issues.
 \begin{enumerate}
   \item The HCMP Player GUI should always respond to user input without 
         significant delay, and the GUI thread should not hang.
-  \item The HCMP Player should respond to Conductor without significant delay.
+  \item The HCMP Player should respond to the Conductor without significant delay.
   \item The HCMP Player should use no more than 100MB of memory.
   \item The HCMP Player should use a reasonable amount of CPU while playing 
         MIDI files.
-  \item The midi player should not crash.
+  \item The HCMP player should not crash.
 \end{enumerate}
 
 \section{Test Plan}
@@ -108,24 +106,25 @@ key test cases are listed below.
         length, including a invalid MIDI file, play, pause and stop. 
   \item Test case 2 -- Load 10 different MIDI files, change the tempo from high to 
         low, and then from low back to high. Change the tempo every 0.5s.
-  \item Test case 3 -- Load 10 different midi files, use the track panel to mute
+  \item Test case 3 -- Load 10 different MIDI files, use the track panel to mute
         from the first track to the last track, then do a similar action with the 
         volume adjust.
-  \item Test case 4 -- Load 10 different midi files into HCMP Player library. Click
-        each track to import, then delete all of the files on the disk, and 
+  \item Test case 4 -- Load 10 different MIDI files into the HCMP Player library. 
+        Click each track to import, then delete all of the files on the disk, and 
         click each track again.  
-  \item Test case 5 -- Create a virtual conductor and create a HCMP Player to use  
-        of network function to connect to Conductor. Conductor issues a command
-        to test each network API to make sure works properly. 
+  \item Test case 5 -- Create a virtual conductor and create an HCMP Player use  
+        the network function to connect to the Conductor. The Conductor issues a command
+        to test each network operation to make sure works properly. 
   \item Test case 6 -- Create a virtual conductor and create 10 HCMP Players, 
-        all connected to Conductor. Conductor issues a command to test each network
-        API to make sure it works properly.
-  \item Test case 7 -- Create a virtual conductor and create a HCMP Player to connect
-        to Conductor. While HCMP Player is playing the file, cut the network connection
-        and determine if HCMP Player behaves properly.
-  \item Test case 8 -- Create a virtual conductor and create 10 HCMP Players, observer
-        if all connected to Conductor. Conductor explicitly asks each HCMP Player to 
-        play with a certain configuration file.
+        all connected to the Conductor. The Conductor issues a command to test each network
+        operation o make sure it works properly.
+  \item Test case 7 -- Create a virtual conductor and create an HCMP Player 
+        to connect to the Conductor. While the HCMP Player is playing the 
+        file, cut the
+        network connection and determine if the HCMP Player behaves properly.
+  \item Test case 8 -- Create a virtual conductor and create 10 HCMP Players, observeing
+        if all connected to the Conductor. The Conductor explicitly asks each 
+        HCMP Player to play with a certain configuration file.
 \end{itemize}
 
 \subsection{Perfermance Test}
@@ -133,17 +132,17 @@ The performance test aims to test the general performance of the HCMP Player. Tw
 important aspects for the performance test are the canvas redraw test and the MIDI
 event test. 
 
-As described in previous chapters, the canvas redraws the whole bitmap everytime 
+As described in previous chapters, the canvas redraws the whole bitmap every time 
 the beat updates. The bitmap will be updated approximately 20 times per second.
 Even though the bitmap size is relatively small, it is still possible to become 
 a bottelneck for the whole system. Any inefficiency in the code will lead to GUI 
-lag or it may hang there without responding to user input. The test case 1 tries 
+lag or it may hang there without responding to user input. Test case 1 tries 
 to measure the general accumlative time spent on redrawing. 
 
-Another issue involves MIDI events. The player engine uses real-time scheduler to  
+Another issue involves MIDI events. The player engine uses a real-time scheduler to  
 constantly poll and execute events. Ideally, the event is dispatched at its 
 scheduled time, or at least we should control it so that events are dispatched within 
-a certain limited time. The test case 2 aims to measure the overall latency between 
+a certain limited time. Test case 2 aims to measure the overall latency between 
 the ideal scheduled time and the actual dispatch time. 
 \subsubsection{Performance Test Case}
 \begin{itemize}

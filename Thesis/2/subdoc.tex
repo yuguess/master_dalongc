@@ -1,7 +1,7 @@
 % this file is called up by thesis.tex
 % content in this file will be fed into the main document
 
-\chapter{Graphic User Interface Design} % top level followed by section, subsection
+\chapter{Graphical User Interface Design} % top level followed by section, subsection
 
 \section{Overview}
 In this chapter, I will describe the GUI design of the HCMP Player, focusing 
@@ -25,7 +25,7 @@ to arrange each component. The whole area
 covers 800 * 600 pixels. The top part is the menu panel 800 * 200 pixels 
 in size. The track panel and 
 the library panel share the middle-left part, each is 200 * 200 pixles in size. 
-The middle-right part is 400 * 600 pixels in size, holding a midi keyboard and data 
+The middle-right part is 400 * 600 pixels in size, holding a MIDI keyboard and data 
 display component. The bottom part is the channel panel. The container is subclass of
 Window class, which works as a window to bound every object inside this area. 
 
@@ -54,8 +54,8 @@ chapters. The menu panel also contains a slider to change
 tempo. The slider indicates of tempo scale factor. For example, 
 if the original tempo is 90 BMP, and the slider is set to scale factor 1.5, 
 the tempo will be 1.5 * 90 
-BMP when playing the file. The import button is used to import a midi file 
-into the HCMP Player. Once a midi file is successfully imported into the HCMP Player  
+BMP when playing the file. The import button is used to import a MIDI file 
+into the HCMP Player. Once a MIDI file is successfully imported into the HCMP Player  
 , the track panel, library panel and data display component will be updated.
 The track path will also be recorded into the configuration file, so that the user 
 will not need to import the same file again.
@@ -71,7 +71,7 @@ will not need to import the same file again.
 Figure 2.4 is a screenshot of the track panel. The track panel is used to 
 control each track's parameters, volume, solo, mute etc. The color
 block at the front of panel indicates its color in the data display component . The 
-track panel will be automatically populated once a midi file is successfully 
+track panel will be automatically populated once a MIDI file is successfully 
 loaded into the HCMP Player.
 \begin{figure}[H]
 \center{\includegraphics[width=0.3\linewidth]{2/7.png}}
@@ -79,40 +79,40 @@ loaded into the HCMP Player.
 \label{fig:speciation}
 \end{figure}
 
-\subsection{Midi Keyboard and Data Display}
+\subsection{MIDI Keyboard and Data Display}
 Figure 2.5 is a screenshot of the data display component. It is made up of a virtual  
-keyboard and a midi note canvas. After successfully loading a midi file, the midi 
+keyboard and a MIDI note canvas. After successfully loading a MIDI file, the MIDI 
 note canvas will 
-draw each midi note in this area. When playing a midi file, the midi canvas will 
-automatically update the position of each midi note. 
+draw each MIDI note in this area. When playing a MIDI file, the MIDI canvas will 
+automatically update the position of each MIDI note. 
 
 The virtual keyboard has 9 octaves and 108 keys. Both the white and black keys 
-are drawn by the canvas. Every midi note will be highlighted in the 
-virtual midi keyboard, based on its pitch, while playing. The canvas update speed is 
-coordinated with the player engine so that the display and midi 
+are drawn by the canvas. Every MIDI note will be highlighted in the 
+virtual MIDI keyboard, based on its pitch, while playing. The canvas update speed is 
+coordinated with the player engine so that the display and MIDI 
 output are synchronized. This avoids asynchronized speed 
-of canvas update and playing midi note problems. The Player engine is responsible for 
+of canvas update and playing MIDI note problems. The Player engine is responsible for 
 updating the beat, and it 
 periodically sends synchronization information to the GUI. After receiving updated 
-information from the player engine, the GUI will update all midi notes in the canvas by 
+information from the player engine, the GUI will update all MIDI notes in the canvas by 
 redrawing the whole canvas.
 
-Each color of the midi note represents a track inside 
-a midi file. In the current version, the color for each track's midi note is 
-predefined. Midi canvas scroll speed is linear to the tempo of midi. Whenever 
-a user makes a change to the tempo, the scroll speed of the midi canvas will adjust
+Each color of the MIDI note represents a track inside 
+a MIDI file. In the current version, the color for each track's MIDI note is 
+predefined. MIDI canvas scroll speed is linear to the tempo of MIDI. Whenever 
+a user makes a change to the tempo, the scroll speed of the MIDI canvas will adjust
 accordingly. When a user mutes a
-track, its color midi note in midi canvas will temporarily be set to invisble. 
+track, its color MIDI note in MIDI canvas will temporarily be set to invisble. 
 The canvas
 update frequency is 20Hz. To make logic easier, every time an update event 
-happens, the whole midi canvas will be redrawn. The midi canvas is 400 * 600 pixels
-in size, and these pixels are updated 20 times every second. The chapter 6, we will
+happens, the whole MIDI canvas will be redrawn. The MIDI canvas is 400 * 600 pixels
+in size, and these pixels are updated 20 times every second. The Chapter 6, we will
 discuss the performance issue of the canvas update implementation. A test case is
 designed to evaluate the general performance of this object. There is a canvas 
-buffer data structure to store all the ``visble'' midi notes inside data 
-display object. Usually, the size of a midi file is no more than 10MB. To improve
+buffer data structure to store all the ``visble'' MIDI notes inside data 
+display object. Usually, the size of a MIDI file is no more than 10MB. To improve
 the genearl efficiency of canvas, a cache like data structure is set in 
-every canvas object. Based on the test case of chapter 6, there is no
+every canvas object. Based on the test case of the Chapter 6, there is no
 significant lagging in display and the overall performance of using redraw 
 method is acceptable.
 
@@ -124,15 +124,15 @@ method is acceptable.
 
 \subsection{HCMP Player Library}
 
-Figure 2.6 is a screenshot of the midi library panel. This simple midi library is 
-used to retain all the midi files that have ever been successfully loaded into 
+Figure 2.6 is a screenshot of the MIDI library panel. This simple MIDI library is 
+used to retain all the MIDI files that have ever been successfully loaded into 
 the HCMP Player. 
 The configration file of the HCMP Player stores all the file names and its paths, 
 when the user next launches the HCMP Player, it can load
-recently openned midi files immediately. When a user clicks any file in the libary, 
+recently openned MIDI files immediately. When a user clicks any file in the libary, 
 the GUI looks up a hash-like data structure and fetches its file path 
 (if it exists), the GUI then automatically
-loads this information into the HCMP Player. If the midi file failed to load, 
+loads this information into the HCMP Player. If the MIDI file failed to load, 
 the library and its configuration file will remove the obsolete entry, then 
 update the library panel.
 
@@ -145,8 +145,8 @@ update the library panel.
 \section{Player Mode}
 
 The HCMP Player has two modes, stand-alone mode and network mode. 
-In stand-alone mode, the HCMP Player can be used as a normal midi player. 
-The user can load and play any midi file. In network mode, 
+In stand-alone mode, the HCMP Player can be used as a normal MIDI player. 
+The user can load and play any MIDI file. In network mode, 
 the HCMP Player will connect to a remote 
 server. In the HCMP project, the server contains a conductor, that 
 is responsible for communication and coordination with all HCMP Player instances. 
@@ -158,7 +158,7 @@ then issuing commands to all the connected instances of the HCMP Player.
 
 When lauching the program, the HCMP player is by default in stand-alone mode, 
 with the GUI component's function as described above. 
-The user can use the HCMP Player to play midi files, change tempo, change volume, etc.
+The user can use the HCMP Player to play MIDI files, change tempo, change volume, etc.
 
 
 \subsection{Network Mode}
@@ -178,4 +178,4 @@ In this mode, the player control buttons play, pause
 and stop continue to work as normal. To avoid conflict problems, other buttons will 
 be temporarily disabled, and the binding method for these buttons is replaced by
 another set of functions. The detailed network API will be explained  
-in chapter 5.
+in the Chapter 5.

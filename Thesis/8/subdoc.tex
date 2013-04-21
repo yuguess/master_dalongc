@@ -25,15 +25,23 @@ There are some components that can be built upon the HCMP Player and some
 what can be directly integrated with the HCMP Player. Two
 features can be added to further extend the HCMP Player's functionality. 
 
-\subsection{Integrate with Score Following}
-HCMP has a score following component which is also developed with Serpent.
-Figure 7.1 is a screenshot of the score following component. The score 
-following component can be used to notate a music score, turn
-``pages''. The original score following component has a built-in player function,
-and it can easily be replaced by the HCMP Player. With a set of predefined API 
-of HCMP Player, score following components can be easily extended to coperate with 
-the HCMP Player. The HCMP Player will synchronize with score following components 
-by constantly receiving commands through the network. 
+\subsection{Integrate with Score Display}
+HCMP has a score display component which is also developed with Serpent.
+Figure 7.1 is a screenshot of the score display component. The score 
+display component can be used to notate a music score and turn
+pages. Since the HCMP Player described here and the score display 
+are really just two different specializations of the Player class,
+both can be controlled by a Conductor object which will keep them synchronized.
+
+Although the score display component illustrated here was used in earlier 
+HCMP prototypes, a newer display component has been developed by Zeyu 
+\cite{Zeyu:2013}.
+
+%The original score following component has a built-in player function,
+%and it can easily be replaced by the HCMP Player. With a set of predefined API 
+%of HCMP Player, score following components can be easily extended to coperate 
+%with the HCMP Player. The HCMP Player will synchronize with score following 
+%components by constantly receiving commands through the network. 
 
 \begin{figure}[H]
 \center{\includegraphics[width=0.5\linewidth]{8/1.png}}
@@ -42,26 +50,26 @@ by constantly receiving commands through the network.
 \end{figure}
 
 \subsection{Integrate with Midi Database}
-Another interesting work is about MIDI Database\cite{Dawen:ISMIR2011} which 
-is based on Dawen Liang's previous work. The basic idea of MIDI Database 
+Another interesting applicatoin relates to MIDI Database \cite{Dawen:ISMIR2011} 
+based on Dawen Liang's previous work. The basic idea of a MIDI Database 
 is to create a tool by which a user is able to quickly record, organize
-and retrieve audio information from various sources. The MIDI Database 
-defines a complete set of API's for its clients. One possible extention of HCMP 
-Player is to integrate MIDI Database into the HMCP Player library functions, 
-so that users can easily use the HCMP Player to search and play MIDI 
-segements from a previous history Database.
+and retrieve audio information from various sources. The HCMP could be  
+integrated with a MIDI Database, so that users can easily play MIDI 
+segements resulting from  Database queries.
 
 \section{Conclusion}
 From the HCMP project's perspective, the HCMP Player is a building block for a 
-larger project upon which more powerful components can be built. It can also 
-coperate with other components to complete a complex job, or be used by other
-components. From a developer's 
-perspective, the HCMP Player provides a complete set of API's which can be extended 
-and tailored to fit into a more sophisticated project.
+larger project. It can also cooperate with other components to create other
+applications. From a developer's perspective, the HCMP Player provides an API
+which can be extended and tailored to fit into a more sophisticated project.
 The HCMP Player can be split into 3 parts:  
 GUI, player engine and network. The design and usage of each part 
 is explained in detail in the previous chapters. I also briefly decribe 
-the implementation of each part. As a supplementary,
-some pseucode segments are provided to illustrate logic. A complete list of
-the HCMP Player features is provides and a successful criteria is defined to
-help evaluate the project.
+the implementation of each part. Some pseucode segments are provided to 
+illustrate logic. A complete list of the HCMP Player features is provided 
+and the project has been evaluated according to a set of criteria for success. 
+
+As an open-source MIDI player with facilities for network control, 
+synchronization, visualization of sequences, and a graphical user interface,
+I hope that the HCMP Player will find many application's as a component of 
+interactive music systems.

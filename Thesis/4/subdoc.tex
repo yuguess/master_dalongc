@@ -1,59 +1,45 @@
 % this file is called up by thesis.tex
 % content in this file will be fed into the main document
 
-%: ----------------------- name of chapter  -------------------------
-\chapter{Network Design} % top level followed by section, subsection
-
-
-%: ----------------------- paths to graphics ------------------------
-
-% change according to folder and file names
-\ifpdf
-    \graphicspath{{X/figures/PNG/}{X/figures/PDF/}{X/figures/}}
-\else
-    \graphicspath{{X/figures/EPS/}{X/figures/}}
-\fi
-
-%: ----------------------- contents from here ------------------------
+\chapter{Network Design}
 
 \section{Overview}
 
-Chpater 4 mainly discuss the network design of the HCMP Player,  
-focus will be on illustrating design decision behind the network function of    
-HCMP Player, A full list of network API will be given, by which any other 
-HCMP componets can use to communicate with HCMP Player through network.   
-Apart from network API, chapter 4 also discuss how HCMP player establish a 
-connection with remote server at first place. In real implementation, the HCMP Player 
-use zeromq library to facilitate network devleopment. Zeromq library 
-integrate several
-different ways for communication between nodes within network range.
-We will briefly discuss each method, together with its pros and cons, and 
+Chpater 4 discusses the network design of the HCMP Player.  
+I focus on illustrating the design decisions behind the network function of    
+the HCMP Player. A full description of network API will be provided. All other
+HCMP componets can communicate with the HCMP Player through the network,
+with the network API. Chapter 4 also discusses how the HCMP player 
+creates a connection with remote server. The implementation 
+use Zeromq library to facilitate network devleopment. The Zeromq library 
+integrates several different ways to communicate between nodes on a network.
+We will briefly cover each method, together with its pros and cons, and 
 its usage inside the HCMP Player.
 
 \section{Conductor and Player}
-In network module of HCMP Player, 3 kinds of design pattern is mainly used. The 
-request \& reply design pattern is the most commonly used one, it is used in 
-building connection between remote server
-and HCMP Player. After connection has been established, the remote server and
-HCMP Player will adapt another kind of pattern, observer pattern. 
+In network module of the HCMP Player, three design patterns are used. The 
+request and reply design pattern is the most common and used is used to 
+build the connection between remote server
+and the HCMP Player. After connection has been established, the remote server and
+the HCMP Player will adopt observer pattern. 
 
 \subsection{Request \& Reply Pattern}
 The request and reply pattern is the most basic pattern used in network 
-communication. Just as its name suggests, the server send request to client, 
-after receving the request, client handle the request and send reply to 
-server. This pattern is heavily used in remote procedure call (RPC) programming 
-model, for example, the caller object can invoke some methods from callee 
-object regardless of callee object is stored in local machine memory or
-memory space in a remote machine. The most typical use is in web programming, 
-where user press a button, this event eventually invoke a method in server-side, 
-after some computation, the server reply with result to webpage. In most cases, 
-the request \& reply pattern
-rely on the feature of TCP to reliably deliver the message. 
+communication. Just as its name suggests the client sends request to the server,
+the server recieves, then handles the request and sends a reply to
+the client. This pattern is heavily used in the remote procedure call (RPC) 
+programming model. The caller object can invoke a method from the called 
+object, whether the called object is stored in local machine memory or
+in the remote machine's memory. The request and reply pattern is commonly userd
+in web programming. For example when a user presses a button, this event will 
+invoke a method on the server. After some computation the server replies with 
+a result sent to the web page. In most cases, the request and reply pattern
+uses TCP to reliably deliver the message. 
 
-Figure 4.1 indicate how this pattern works in HCMP Player. In HCMP Player, 
-when user try to establish the connection with remote  
-server, it will send request and wait for its reply. A timeout limit is set to 
-avoid waiting for too long. If connect to a remote server failed, the HCMP Player
+Figure 4.1 indicates how the request and reply pattern is used by the HCMP Player. 
+When the user tries to establish a connection with the remote server, the HCMP Player 
+will send a request and wait for a reply. A timeout limit is set to 
+avoid waiting too long. If the attempt to connect to fails the HCMP Player
 will ``rollback'' to stand-alone mode.
 \begin{figure}[H]
 \center{\includegraphics[width=0.55\linewidth]{4/3.png}}
@@ -62,23 +48,23 @@ will ``rollback'' to stand-alone mode.
 \end{figure}
 
 \subsection{Observer Pattern}
-In observer pattern, there is an subject object, the subject object  maintains 
-a list of its dependents, which are called observers, and notifies them 
-automatically of any state changes, usually by calling one of their methods. Figure
+In the observer pattern, the subject object maintains a list of its 
+dependents, called observers, and notifies them automatically of 
+any state changes, usually by calling one of their methods.
 \begin{figure}[H]
 \center{\includegraphics[width=0.8\linewidth]{4/5.png}}
 \caption{UML Diagram of Observer Pattern}
 \label{fig:speciation}
 \end{figure}
 
-After connection has been built, the remote server and the HCMP Player form a 
-observer-pattern relationship, where remote server is the subject and HCMP Player 
-is dependent. Firstly, the HCMP Player try to use a RPC call to register into 
-remote server dependents list, then it wait for reply from the remote server. In real 
-implementation, the conductor is in remote server part and resposible
-for synchronizing all the HCMP Players. Each conductor will maintain list of HCMP Players
-, this list will be updated once old player become obselete, or new player join in.
-Figure 4.3 illustrate observer pattern in HCMP Player.  
+After a connection has been built, the Conductor and the HCMP Player form an 
+observer-pattern relationship. The Conductor is the subject and the HCMP Player 
+is its dependent, an observer. The HCMP Player first uses an RPC call to register 
+itself in the Conductor dependents list then it waits for a reply from the Conductor. 
+The conductor is resposible for synchronizing all the HCMP Players. Each Conductor 
+will maintain a list of HCMP Players. This list is updated when an old player becomes 
+obselete, or a new player is created and sends an RPC call to the Conductor.
+Figure 4.3 illustrates the observer pattern in HCMP Player.  
 \begin{figure}[H]
 \center{\includegraphics[width=0.65\linewidth]{4/2.png}}
 \caption{Observer Pattern}
@@ -87,14 +73,12 @@ Figure 4.3 illustrate observer pattern in HCMP Player.
 
 \subsection{Push \& Pull Pattern}
 In order to monitor the status of each HCMP Player, each registered HCMP Player 
-need to periodically push ``heart beat'' message to remote server. 
-The remote server set a count down timer for each HCMP Player currently 
-connected to server. It  
-then periodically pull message and then reset according HCMP Player's timer. 
-If there exist a timer reach 
-zero, then remote server will further send confirm message, temporarily deregsiter 
-this HCMP Plyaer from dependent list. Figure 4.4 indicate how push \& pull pattern 
-used in HCMP Player.
+will periodically push ``heart beat'' message to the Conductor.
+The Conductor sets a count down timer for each HCMP Player it is currently 
+connected to. It then periodically pulls a message and resets according to the 
+HCMP Player's timer. If a timer reaches zero the Conductor will send a confirm 
+message to temporarily de-regsiter this HCMP Plyaer from its dependent list. 
+Figure 4.4 illustrates a push \& pull pattern used in HCMP Player.
 
 \begin{figure}[H]
 \center{\includegraphics[width=0.65\linewidth]{4/4.png}}
@@ -104,28 +88,27 @@ used in HCMP Player.
 
 \section{Network Programming Interface}
 The programming interface defined below is used for communication 
-between remote server and HCMP Player. Any external exponent that  
-follows these APIs is able to communicate and take control of the 
-HCMP Player.
-The GUI component is responsible for receving all the network request. 
-Imagine a situation where remote server   
-try to start command to all HCMP players. The remote server send start 
-request to all HCMP players in its dependent list.
-Once the request is sucessfully delivered, the GUI of HCMP player will 
-receive and handle the request, after parsing the request string, 
-it map and invoke the internal API, then send the request to player engine 
-through message queue. Once player engine read from message queue and
-begin to schedule the first midi note, the HCMP Player start playing.
+between the Conductor and the HCMP Player. Any external exponent that  
+uses these APIs is able to communicate with and take control of the 
+HCMP Player. The GUI component is responsible for receving all 
+network request. Imagine a situation where the Conductor 
+tries to take command of all the HCMP players. The Conductor sends a start
+request to all HCMP players in its dependents list.
+Once the request is sucessfully delivered, the GUI of the HCMP player will 
+receive and handle the requests. After parsing the request string, 
+it maps and invokes the internal command, then sends the request to the player 
+engine through a message queue. The player engine reads the message queue and
+schedules the first MIDI note, and the HCMP Player begins to play.
 
 \begin{figure}[H]
 \center{\includegraphics[width=0.5\linewidth]{3/1.png}}
 \caption{HCMP Player Network API}
 \label{fig:speciation}
 \end{figure}
-Figure 4.5 illustrate how conductor coordiate with HCMP Player, all the  
-related APIs are list below \\
+Figure 4.5 illustrate how conductor coordiates with the HCMP Player, all the  
+related commands are list below \\
 
-From remote server to HCMP Player
+From the Conductor Conto HCMP Player
 \begin{itemize}
   \item \texttt{play - start playing}  
   \item \texttt{stop - stop playing}
@@ -134,7 +117,7 @@ From remote server to HCMP Player
   \item \texttt{set\_position - set play position to the given parameter}
 \end{itemize}
 
-From HCMP Player to remote server
+From HCMP Player to the Conductor 
 \begin{itemize}
   \item \texttt{play\_all - inform the remote server to play}  
   \item \texttt{stop\_all - inform the remote server to stop}  
