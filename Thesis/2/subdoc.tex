@@ -16,7 +16,6 @@ stand-alone and network mode. Each mode's function and usage will be discussed.
 \begin{figure}[H]
 \center{\includegraphics[width=0.75\linewidth]{2/1.png}}
 \caption{HCMP Player GUI Screenshot}
-\label{fig:speciation}
 \end{figure}
 
 \section{Layout}
@@ -24,7 +23,7 @@ Figure 2.2 is a layout of the GUI of the HCMP Player. We use absolute position l
 to arrange each component. The whole area 
 covers 800 * 600 pixels. The top part is the menu panel 800 * 200 pixels 
 in size. The track panel and 
-the library panel share the middle-left part, each is 200 * 200 pixles in size. 
+the library panel share the middle-left part, each is 200 * 200 pixels in size. 
 The middle-right part is 400 * 600 pixels in size, holding a MIDI keyboard and data 
 display component. The bottom part is the channel panel. The container is subclass of
 Window class, which works as a window to bound every object inside this area. 
@@ -32,7 +31,6 @@ Window class, which works as a window to bound every object inside this area.
 \begin{figure}[H]
 \center{\includegraphics[width=0.6\linewidth]{2/5.png}}
 \caption{HCMP Player Layout}
-\label{fig:speciation}
 \end{figure}
 
 \section{GUI Component}
@@ -63,7 +61,6 @@ will not need to import the same file again.
 \begin{figure}[H]
 \center{\includegraphics[width=0.8\linewidth]{2/6.png}}
 \caption{HCMP Player Menu Panel}
-\label{fig:speciation}
 \end{figure}
 
 \subsection{Track Panel}
@@ -76,7 +73,6 @@ loaded into the HCMP Player.
 \begin{figure}[H]
 \center{\includegraphics[width=0.3\linewidth]{2/7.png}}
 \caption{HCMP Player Track Panel}
-\label{fig:speciation}
 \end{figure}
 
 \subsection{MIDI Keyboard and Data Display}
@@ -102,16 +98,16 @@ a MIDI file. In the current version, the color for each track's MIDI note is
 predefined. MIDI canvas scroll speed is linear to the tempo of MIDI. Whenever 
 a user makes a change to the tempo, the scroll speed of the MIDI canvas will adjust
 accordingly. When a user mutes a
-track, its color MIDI note in MIDI canvas will temporarily be set to invisble. 
+track, its color MIDI note in MIDI canvas will temporarily be set to invisible. 
 The canvas
 update frequency is 20Hz. To make logic easier, every time an update event 
 happens, the whole MIDI canvas will be redrawn. The MIDI canvas is 400 * 600 pixels
 in size, and these pixels are updated 20 times every second. The Chapter 6, we will
 discuss the performance issue of the canvas update implementation. A test case is
 designed to evaluate the general performance of this object. There is a canvas 
-buffer data structure to store all the ``visble'' MIDI notes inside data 
+buffer data structure to store all the ``visible'' MIDI notes inside data 
 display object. Usually, the size of a MIDI file is no more than 10MB. To improve
-the genearl efficiency of canvas, a cache like data structure is set in 
+the general efficiency of canvas, a cache like data structure is set in 
 every canvas object. Based on the test case of the Chapter 6, there is no
 significant lagging in display and the overall performance of using redraw 
 method is acceptable.
@@ -119,7 +115,6 @@ method is acceptable.
 \begin{figure}[H]
 \center{\includegraphics[width=0.7\linewidth]{2/3.png}}
 \caption{HCMP Player Data Display Component}
-\label{fig:speciation}
 \end{figure}
 
 \subsection{HCMP Player Library}
@@ -127,9 +122,9 @@ method is acceptable.
 Figure 2.6 is a screenshot of the MIDI library panel. This simple MIDI library is 
 used to retain all the MIDI files that have ever been successfully loaded into 
 the HCMP Player. 
-The configration file of the HCMP Player stores all the file names and its paths, 
+The configuration file of the HCMP Player stores all the file names and its paths, 
 when the user next launches the HCMP Player, it can load
-recently openned MIDI files immediately. When a user clicks any file in the libary, 
+recently opened MIDI files immediately. When a user clicks any file in the library, 
 the GUI looks up a hash-like data structure and fetches its file path 
 (if it exists), the GUI then automatically
 loads this information into the HCMP Player. If the MIDI file failed to load, 
@@ -139,7 +134,6 @@ update the library panel.
 \begin{figure}[H]
 \center{\includegraphics[width=0.3\linewidth]{2/8.png}}
 \caption{HCMP Player Library Panel}
-\label{fig:speciation}
 \end{figure}
 
 \section{Player Mode}
@@ -156,7 +150,7 @@ then issuing commands to all the connected instances of the HCMP Player.
 
 \subsection{Stand-alone Mode}
 
-When lauching the program, the HCMP player is by default in stand-alone mode, 
+When launching the program, the HCMP player is by default in stand-alone mode, 
 with the GUI component's function as described above. 
 The user can use the HCMP Player to play MIDI files, change tempo, change volume, etc.
 
@@ -173,7 +167,7 @@ If a confirmation signal is received from the
 remote server, the 2-way connection between the HCMP Player and 
 remote server is successfully created allowing the HCMP Player and 
 remote server to communicate. Control of the HCMP 
-Player will partially be ``transfered'' to the remote server. 
+Player will partially be ``transferred'' to the remote server. 
 In this mode, the player control buttons play, pause   
 and stop continue to work as normal. To avoid conflict problems, other buttons will 
 be temporarily disabled, and the binding method for these buttons is replaced by

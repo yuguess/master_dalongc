@@ -7,25 +7,24 @@
 This chapter describes the design, usage and programming interface. My focus 
 will be on communication between the GUI component and the player engine, and 
 the ``service'' player engine provides. In the implementation, the player 
-engine is executed in an independent thread, the perfermer thread. The 
+engine is executed in an independent thread, the performer thread. The 
 message queue is similar to unix-style ``pipe'' between two programs. The 
 player engine is periodically invoked up by an external timer to 
 execute a predefined task including checking the message queue and handling 
 pending requests. The external timer is set to 10ms, enabling user 
-input to be immediatelly passed to the player engine through message queue and 
+input to be immediately passed to the player engine through message queue and 
 processed. Since messages are buffered slightly ahead and accurately timed 
 using timestamps, the latency is small and can be ignored.
 
 \begin{figure}[H]
 \center{\includegraphics[width=0.55\linewidth]{3/3.png}}
 \caption{GUI Thread and Performer Thread}
-\label{fig:speciation}
 \end{figure}
 
 The player engine serves two major purposes. First it receives
 messages from the GUI component and processes them. The second purpose is to 
 schedule and play MIDI events at the desire time, and if needed, to
-reschedule those scheduled events. In concolusion, the design of the player 
+reschedule those scheduled events. In conclusion, the design of the player 
 engine is divided into two parts: communication and synchronization. 
 Communication refers to the way the player engine and GUI work together. 
 Synchronization refers to media synchroization, which involves scheduling 
@@ -47,7 +46,7 @@ from the network. The player engine does not differentiate between requests
 originating from user input and processed through the GUI and requests 
 originating from a remote server and processed through the GUI component. 
 A unified API between the GUI component and the player engine is defined to
-clearly illustrate the responsiblity boundary of each module. Note that the 
+clearly illustrate the responsibility boundary of each module. Note that the 
 API between GUI component and the player engine is different from the network API. 
 The former is an internal API between two modules, the latter is defined to 
 coordinate between a remote server and multiple instances of HCMP players.
@@ -55,7 +54,6 @@ coordinate between a remote server and multiple instances of HCMP players.
 \begin{figure}[H]
 \center{\includegraphics[width=0.7\linewidth]{3/4.png}}
 \caption{GUI and Player Engine}
-\label{fig:speciation}
 \end{figure}
 
 \subsection{Graphical User Interface Thread}
@@ -96,7 +94,7 @@ state transition diagram. When the player engine thread is
 created, it also initializes a timer to periodically invoke itself. 
 
 %Note that to avoid dropping request problem from happening, 
-%we need make sure that all the routinues can be executed and completed within 
+%we need make sure that all the routines can be executed and completed within 
 %bounded time.
 
 \begin{table}[htdp]
@@ -165,7 +163,6 @@ occurred at time $t_0$, the current time is $t$, and the current beat is $b$.
 \begin{figure}[H]
 \center{\includegraphics[width=0.5\linewidth]{3/2.png}}
 \caption{Linear Mapping Tempo Prediction \cite{Dawen:ISMIR2011}}
-\label{fig:speciation}
 \end{figure}
 
 One advantage of this approach is that there is almost no latency.
@@ -192,7 +189,7 @@ t = t_0 + (b - b_0) / s - l
 We simply map the beat position $b$ according to ($b_0$, $t_0$, $s$), and then subtract the
 latency $l$ to get the computation time $t$.
 
-Our current scheduelr use a simple method to predict the beat . 
+Our current scheduler use a simple method to predict the beat . 
 A linear regression over recent taps is used to estimate the
 mapping from beat to time. 
 

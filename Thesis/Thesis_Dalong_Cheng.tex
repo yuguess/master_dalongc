@@ -1,8 +1,3 @@
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-% Default font size is 12pt, it can be changed here
 \documentclass[12pt]{Latex/Classes/PhDthesisPSnPDF} 
 
 \include{Latex/Macros/MacroFile1}
@@ -52,10 +47,6 @@
 }
 
 \begin{document}
-
-%----------------------------------------------------------------------------------------
-%	TITLE PAGE
-%----------------------------------------------------------------------------------------
 
 \begin{titlepage}
 
@@ -135,47 +126,9 @@ Richard \textsc{Randall}
 \include{7/subdoc}
 \include{8/subdoc}
 
-
-\begin{thebibliography}{pubext}
-%\bibliography{sample}
-
-\bibitem{Dawen:2011}
-Framework for Coordination and Synchronization of Media, D.Liang, G.Xia and R.Dannenberg, NIME 2011.
-
-\bibitem{ZMQ}
-http://www.zeromq.org
-
-\bibitem{zeromq}
-http://sourceforge.net/p/livedisp/wiki/HCMP\_messagingi\_protocol/
-
-\bibitem{Serpent}
-http://www.cs.cmu.edu/~music/aura/serpent-info.htm
-
-\bibitem{wxWidget}
-http://www.wxwidget.org
-
-\bibitem{Dawen:ISMIR2011}
-Segmentation, Clustering, and Display in a Personal Music Database for Musicians,
-G.Xia, D.Liang, R.Dannenberg, ISMIR 2011.
-
-\bibitem{Roger:89}
-Dannenberg, R. Real-time scheduling and computer accompaniment. In Current
-Directions in Computer Music Research, edited by Max. V. Mathews \& John R.
-Pierce, MIT Press, Cambridge, MA, 1989, pp.225-261.
-
-\bibitem{Ableton:2011}
-Ableton. Ableton reference manual.
-http://www.ableton.com/pages/downloads/manuals (2011).
-
-\bibitem{Robertson:2007}
-Robertson, A. and Plumbley, M. D. B-Keeper: A beat tracker for real time
-synchronisation within performance. Proceedings of New Interfaces for Musical
-Expression (NIME 2007), New York, NY, USA, (2007), pp 234-237.
-
-\bibitem{Zeyu:2013}
-Zeyu Jin. Master Thesis, 2013, Pittsburgh, PA, USA.
-
-\end{thebibliography}
+\bibliographystyle{Latex/Classes/PhDbiblio-url2}
+\renewcommand{\bibname}{References}
+\bibliography{9/references}
 
 \include{9/declaration}
 

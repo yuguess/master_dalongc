@@ -33,7 +33,7 @@ successful criteria, the project must satisfy both functional and performance re
         volume for according track.  
   \item The player should contain a simple MIDI library to manage MIDI files. 
         The library should automatically remember frequently used MIDI files.
-  \item The player should provide a complete configuraion interface for the 
+  \item The player should provide a complete configuration interface for the 
         user, all user's setting should be saved automatically.
 \end{enumerate}
 
@@ -51,12 +51,12 @@ successful criteria, the project must satisfy both functional and performance re
         subscribers and invoke according callback function once an event happens.
   \item Multiple instances of MIDI player should be able to connect to one conductor. 
   \item After establishing connection with the Conductor, the MIDI player 
-        should be able to receive tempo informaiton from the Conductor and 
+        should be able to receive tempo information from the Conductor and 
         synchronize with it.     
   \item The Conductor should be able to ask certain MIDI player to load specified configuration file or it could directly 
         send configuration information through network to MIDI player.
   \item 
-    The HCMP player is compatible with ZeroMQ \cite{zeromq} api, and 4 core 
+    The HCMP player is compatible with ZeroMQ \cite{zeromq} API, and 4 core 
     functions will be like
     \begin{itemize}
       \item play - ask a player to start playing 
@@ -73,5 +73,5 @@ successful criteria, the project must satisfy both functional and performance re
   \item The HCMP player should response to the Conductor without significant delay.
   \item The HCMP player should use no more than 100MB memory.
   \item The HCMP player should use reasonable amount of CPU while playing MIDI file.
-  \item Hopefully, the HCMP player shoud not crash without any reason. 
+  \item Hopefully, the HCMP player should not crash without any reason. 
 \end{enumerate}

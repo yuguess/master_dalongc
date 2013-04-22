@@ -15,7 +15,7 @@
 \fi
 
 \section{Overview}
-Chapter 5 mainly describes the implemenation details of the HCMP Player. Some
+Chapter 5 mainly describes the implementation details of the HCMP Player. Some
 pseudocode snippets are given to illustrate the relationship between 
 different components. The focus will be on discussing some implementation 
 related issues. 
@@ -31,7 +31,7 @@ which greatly facilitates the development of music-related applications.
 As for the GUI development, the wxWidgets \cite{wxWidget} library provides one 
 the of best solutions, and some core functions and objects have been 
 integrated into the Serpent library. The Zeromq library is used to develop 
-network related functions, it integrates with common network commmunication 
+network related functions, it integrates with common network communication 
 functions. The whole project is developed in the Linux 32-bit environment. 
 Serpent provide a cross-platform solution, so the HCMP Player should also 
 run on Windows or Mac platforms.
@@ -76,11 +76,11 @@ request to the player engine. Note that the argument of the binding method is
 a string with the method name and parameters
 separated by character \texttt{`;'}. The binding function's type is predefined 
 inside Serpent, which has 4 predefined arguments. The first argument is the object 
-itself. The second arugment is the event type. The third and fourth arguments are 
+itself. The second argument is the event type. The third and fourth arguments are 
 event position.
 Not all of the event arguments are valid, since some other events provide 4 arguments, 
 while some events may only need 2 arguments. In Serpent, all of the object events 
-are dispatched through the same user defined fucntion, which gives the user full 
+are dispatched through the same user defined function, which gives the user full 
 power to develop their own customized handlers.
 
 \begin{table}[htdp]
@@ -115,7 +115,7 @@ In the HCMP Player, there are two subclasses of the Canvas class,
 \texttt{Keyboard} and \texttt{MidiNotes}. The former draws a 108-key 
 keyboard; the latter draws all MIDI notes on the canvas. Each class has a buffer 
 to store all of the objects needed to be drawn. The play engine periodically 
-sends ``synchronization'' signals. Everytime the GUI receives the synchronization 
+sends ``synchronization'' signals. Every time the GUI receives the synchronization 
 signal, it will redraw the whole area.
 
 \begin{table}[htdp]
@@ -136,7 +136,7 @@ class Keyboard(Canvas)
 
 \subsection{Create a New Thread}
 The Player engine runs inside a separate thread space. When the GUI thread completes 
-all of the subcomponets' initialization work, it will create a new thread. The newly
+all of the subcomponents' initialization work, it will create a new thread. The newly
 spawned thread will execute the player engine code. In Table 5.4, we use the   
 \texttt{thread\_create} built-in function of the Serpent standard library to create 
 a new thread. It has 3 arguments. 
@@ -168,7 +168,7 @@ communication channel is a message queue. The Serpent library provides two
 built-in functions: \texttt{thread\_send} and \texttt{thread\_receive} 
 for message passing. Both \texttt{thread\_send} and \texttt{thread\_receive}
 require a \texttt{thread\_id} argument, which represents the caller thread ID. 
-Note that the thread needs to define a \texttt{portime\_callback} function
+Note that the thread needs to define a \texttt{porttime\_callback} function
 in order to periodically check the message queue. Table 5.5 illustrates how 
 two threads send and receive requests via the \texttt{thread\_send} and 
 \texttt{thread\_receive} functions.
@@ -184,7 +184,7 @@ Class PlayBtn(button)
   def send_play(obj, event, x, y)
     thread_send(thread_id, "play;void")
 
-------- separte line -------
+------- separate line -------
 
 //thread 2 receive request 
 def porttime_callback(ms)
@@ -200,7 +200,7 @@ from GUI component through a message queue, parse the command string (the
 command string structure is defined in the Chapter 3), and then look up a state-method 
 matrix (refer to Table 3.2 and 3.3) to fetch the method to transit from the 
 current state to the new state. Note that this segment of code snippet is also 
-embeded within the \texttt{portime\_callback} function.
+embedded within the \texttt{porttime\_callback} function.
 
 
 \begin{table}[htdp]
