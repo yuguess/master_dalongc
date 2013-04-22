@@ -77,38 +77,38 @@ loaded into the HCMP Player.
 
 \subsection{MIDI Keyboard and Data Display}
 Figure 2.5 is a screenshot of the data display component. It is made up of a virtual  
-keyboard and a MIDI note canvas. After successfully loading a MIDI file, the MIDI 
-note canvas will 
-draw each MIDI note in this area. When playing a MIDI file, the MIDI canvas will 
+keyboard and a MIDI note Canvas. After successfully loading a MIDI file, the MIDI 
+note Canvas will 
+draw each MIDI note in this area. When playing a MIDI file, the MIDI Canvas will 
 automatically update the position of each MIDI note. 
 
 The virtual keyboard has 9 octaves and 108 keys. Both the white and black keys 
-are drawn by the canvas. Every MIDI note will be highlighted in the 
-virtual MIDI keyboard, based on its pitch, while playing. The canvas update speed is 
+are drawn by the Canvas. Every MIDI note will be highlighted in the 
+virtual MIDI keyboard, based on its pitch, while playing. The Canvas update speed is 
 coordinated with the player engine so that the display and MIDI 
 output are synchronized. This avoids asynchronized speed 
-of canvas update and playing MIDI note problems. The Player engine is responsible for 
+of Canvas update and playing MIDI note problems. The Player engine is responsible for 
 updating the beat, and it 
 periodically sends synchronization information to the GUI. After receiving updated 
-information from the player engine, the GUI will update all MIDI notes in the canvas by 
-redrawing the whole canvas.
+information from the player engine, the GUI will update all MIDI notes in the Canvas by 
+redrawing the whole Canvas.
 
 Each color of the MIDI note represents a track inside 
 a MIDI file. In the current version, the color for each track's MIDI note is 
-predefined. MIDI canvas scroll speed is linear to the tempo of MIDI. Whenever 
-a user makes a change to the tempo, the scroll speed of the MIDI canvas will adjust
+predefined. MIDI Canvas scroll speed is linear to the tempo of MIDI. Whenever 
+a user makes a change to the tempo, the scroll speed of the MIDI Canvas will adjust
 accordingly. When a user mutes a
-track, its color MIDI note in MIDI canvas will temporarily be set to invisible. 
-The canvas
+track, its color MIDI note in MIDI Canvas will temporarily be set to invisible. 
+The Canvas
 update frequency is 20Hz. To make logic easier, every time an update event 
-happens, the whole MIDI canvas will be redrawn. The MIDI canvas is 400 * 600 pixels
+happens, the whole MIDI Canvas will be redrawn. The MIDI Canvas is 400 * 600 pixels
 in size, and these pixels are updated 20 times every second. The Chapter 6, we will
-discuss the performance issue of the canvas update implementation. A test case is
-designed to evaluate the general performance of this object. There is a canvas 
+discuss the performance issue of the Canvas update implementation. A test case is
+designed to evaluate the general performance of this object. There is a Canvas 
 buffer data structure to store all the ``visible'' MIDI notes inside data 
 display object. Usually, the size of a MIDI file is no more than 10MB. To improve
-the general efficiency of canvas, a cache like data structure is set in 
-every canvas object. Based on the test case of the Chapter 6, there is no
+the general efficiency of Canvas, a cache like data structure is set in 
+every Canvas object. Based on the test case of the Chapter 6, there is no
 significant lagging in display and the overall performance of using redraw 
 method is acceptable.
 

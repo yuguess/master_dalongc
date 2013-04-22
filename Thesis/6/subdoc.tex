@@ -101,19 +101,19 @@ Class PlayBtn(button)
 
 \subsection{Drawing Canvas}
  
-Canvas objects define an area to draw images. In Serpent, the canvas 
-object use the wxWidget canvas object. The canvas object has a full-size bitmap.
+Canvas objects define an area to draw images. In Serpent, the Canvas 
+object use the wxWidget canvas object. The Canvas object has a full-size bitmap.
 The drawing method first draws on the bitmap, then the whole bitmap is copied 
-to the canvas object. This is a common technique to avoid flicker when a canvas is 
+to the Canvas object. This is a common technique to avoid flicker when a Canvas is 
 redraw In Serpent, a class needs to fulfill two conditions in order 
 to be drawable. The first condition is
 the class needs to be a subclass of the Canvas class. The second condition is that 
 the class need to define its own paint method. Table 5.3 illustrate the user 
-defined \texttt{Keyboard} class, which draws a keyboard on the canvas.
+defined \texttt{Keyboard} class, which draws a keyboard on the Canvas.
 
 In the HCMP Player, there are two subclasses of the Canvas class, 
 \texttt{Keyboard} and \texttt{MidiNotes}. The former draws a 108-key 
-keyboard; the latter draws all MIDI notes on the canvas. Each class has a buffer 
+keyboard; the latter draws all MIDI notes on the Canvas. Each class has a buffer 
 to store all of the objects needed to be drawn. The play engine periodically 
 sends ``synchronization'' signals. Every time the GUI receives the synchronization 
 signal, it will redraw the whole area.
