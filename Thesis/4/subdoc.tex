@@ -18,9 +18,9 @@ its usage inside the HCMP Player.
 
 \section{Conductor and Player}
 In network module of the HCMP Player, three design patterns are used. The 
-request and reply design pattern is the most common and used is used to 
-build the connection between remote server
-and the HCMP Player. After connection has been established, the remote server and
+request and reply design pattern is the most common and is used to 
+build the connection between remote server and the HCMP Player. 
+After connection has been established, the remote server and
 the HCMP Player will adopt observer pattern. 
 
 \subsection{Request \& Reply Pattern}
@@ -39,7 +39,7 @@ uses TCP to reliably deliver the message.
 Figure 4.1 indicates how the request and reply pattern is used by the HCMP Player. 
 When the user tries to establish a connection with the remote server, the HCMP Player 
 will send a request and wait for a reply. A timeout limit is set to 
-avoid waiting too long. If the attempt to connect to fails the HCMP Player
+avoid waiting too long. If the attempt to connect fails the HCMP Player
 will ``rollback'' to stand-alone mode.
 \begin{figure}[H]
 \center{\includegraphics[width=0.55\linewidth]{4/3.png}}
@@ -103,7 +103,7 @@ schedules the first MIDI note, and the HCMP Player begins to play.
 Figure 4.5 illustrate how conductor coordinates with the HCMP Player, all the  
 related commands are list below \\
 
-From the Conductor Conto HCMP Player
+From Conductor to HCMP Player
 \begin{itemize}
   \item \texttt{play - start playing}  
   \item \texttt{stop - stop playing}
@@ -112,7 +112,7 @@ From the Conductor Conto HCMP Player
   \item \texttt{set\_position - set play position to the given parameter}
 \end{itemize}
 
-From HCMP Player to the Conductor 
+From HCMP Player to Conductor 
 \begin{itemize}
   \item \texttt{play\_all - inform the remote server to play}  
   \item \texttt{stop\_all - inform the remote server to stop}  
