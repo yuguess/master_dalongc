@@ -14,7 +14,7 @@ execute a predefined task including checking the message queue and handling
 pending requests. The external timer is set to 10ms, enabling user 
 input to be immediately passed to the player engine through message queue and 
 processed. Since messages are buffered slightly ahead and accurately timed 
-using timestamps, the latency is small and can be ignored.
+using time stamps, the latency is small and can be ignored.
 
 \begin{figure}[H]
 \center{\includegraphics[width=0.55\linewidth]{3/3.png}}
@@ -27,7 +27,7 @@ schedule and play MIDI events at the desire time, and if needed, to
 reschedule those scheduled events. In conclusion, the design of the player 
 engine is divided into two parts: communication and synchronization. 
 Communication refers to the way the player engine and GUI work together. 
-Synchronization refers to media synchroization, which involves scheduling 
+Synchronization refers to media synchronization, which involves scheduling 
 MIDI notes and the response to changes in tempo. 
 
 \section{Communication}
